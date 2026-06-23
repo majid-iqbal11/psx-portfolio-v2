@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Analyzer & Investor Education Guide v2.5 Premium</title>
+    <title>Institutional Portfolio Analytics & Wealth Architecture v3.0</title>
     <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js CDN for Analytics -->
+    <!-- Chart.js CDN for Quant Analytics -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -16,160 +16,166 @@
 </head>
 <body class="p-4 md:p-8 min-h-screen flex flex-col justify-between">
 
-    <!-- TOP NAVIGATION HEADER -->
+    <!-- INSTITUTIONAL HEADER LAYER -->
     <header id="mainHeader" class="hidden max-w-7xl w-full mx-auto flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-slate-700 gap-4">
         <div>
             <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                <span>PORTFOLIO ANALYZER</span> 
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">v2.5 Live Matrix</span>
+                <span>WEALTH ARCHITECTURE</span> 
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">v3.0 Quant Live</span>
             </h1>
-            <p class="text-xs text-slate-400" id="subHeader">Capital Markets Education & Portfolio Guidance Platform | Prepared by Kashan Kazmi</p>
+            <p class="text-xs text-slate-400">Proprietary Asset Valuation & Risk Modeling Environment | Technical Framework</p>
         </div>
         
         <div class="flex items-center gap-4">
             <div class="text-xs text-slate-400 text-right">
-                <div id="welcomeUser" class="text-emerald-400 font-semibold mb-1">Welcome, User!</div>
-                <div><strong>Base Date:</strong> 1 Jan 2026</div>
-                <div><strong>System Time:</strong> June 2026</div>
+                <div id="welcomeUser" class="text-emerald-400 font-semibold mb-1">Authenticated Terminal</div>
+                <div><strong>Temporal Anchor:</strong> 1 Jan 2026</div>
+                <div><strong>System Execution:</strong> June 2026</div>
             </div>
-            <button onclick="handleLogout()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs px-2.5 py-1.5 rounded border border-rose-500/20 transition-colors cursor-pointer">
-                Logout
+            <button onclick="handleLogout()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs px-3 py-1.5 rounded border border-rose-500/20 transition-colors cursor-pointer font-medium tracking-wide">
+                Terminate Session
             </button>
         </div>
     </header>
 
-    <!-- AUTHENTICATION LAYER -->
+    <!-- MANDATORY IDENTITY PROVISIONING INTERFACE (AUTH) -->
     <section id="authScreen" class="max-w-md w-full mx-auto my-auto bg-fintech-card rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 transition-all">
         <div class="text-center mb-6">
             <div class="inline-flex p-3 bg-emerald-500/10 text-emerald-400 rounded-xl mb-3 border border-emerald-500/20">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
             </div>
-            <h2 id="authTitle" class="text-xl font-bold text-white tracking-tight">Create Your Account</h2>
-            <p id="authSubtitle" class="text-xs text-slate-400 mt-1">Join the CFA-Aligned Knowledge Workspace</p>
+            <h2 class="text-xl font-bold text-white tracking-tight">Identity & Access Management</h2>
+            <p class="text-xs text-slate-400 mt-1">Authorized Personnel Authentication Required</p>
+        </div>
+
+        <!-- Segmented Control Tabs -->
+        <div class="flex border-b border-slate-700 mb-6 gap-2">
+            <button id="tabSignup" onclick="setAuthMode('signup')" class="flex-1 pb-2 text-xs font-bold tracking-wider uppercase border-b-2 text-emerald-400 border-emerald-500 cursor-pointer text-center">
+                Register Credentials
+            </button>
+            <button id="tabLogin" onclick="setAuthMode('login')" class="flex-1 pb-2 text-xs font-bold tracking-wider uppercase border-b-2 text-slate-400 border-transparent hover:text-white cursor-pointer text-center">
+                Secure Portal Login
+            </button>
         </div>
 
         <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
             <div id="fullNameGroup">
-                <label class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
-                <input type="text" id="authName" placeholder="Muhammad Majid" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium">
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Account Holder Name</label>
+                <input type="text" id="authName" placeholder="e.g., Muhammad Majid" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium">
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1.5">Email or Username</label>
-                <input type="text" id="authEmail" required placeholder="majid@example.com" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium">
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Unique Identifier / Email</label>
+                <input type="text" id="authEmail" required placeholder="Enter username or email" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium">
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Security Passphrase</label>
                 <input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
             </div>
-            <button type="submit" id="authSubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2.5 rounded transition-colors shadow-lg cursor-pointer mt-2">
-                Register & Initialize Environment
+            <button type="submit" id="authSubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded transition-colors shadow-lg cursor-pointer mt-2">
+                Initialize Provisioning
             </button>
         </form>
-
-        <div class="text-center mt-6 text-xs text-slate-400 border-t border-slate-800 pt-4">
-            <span id="toggleText">Already have an account?</span>
-            <button onclick="toggleAuthMode()" id="toggleAuthBtn" class="text-emerald-400 font-semibold hover:underline ml-1 cursor-pointer">Login Here</button>
-        </div>
     </section>
 
-    <!-- MAIN INTERACTIVE WORKSPACE -->
+    <!-- CAPITAL QUANT INTERACTIVE WORKSPACE -->
     <main class="max-w-7xl w-full mx-auto">
         
-        <!-- MODULE 1: ONBOARDING & FINANCIAL RISK CAPACITY ASSESSMENT -->
+        <!-- RISK DISCLOSURE & SOCIO-ECONOMIC CAPACITY ENGINE -->
         <section id="onboardingScreen" class="hidden bg-fintech-card rounded-xl p-6 mb-8 shadow-xl">
             <div class="border-b border-slate-700 pb-4 mb-6">
                 <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                    <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded">M1</span>
-                    User Onboarding, Risk Profiling & Capacity Engine
+                    <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded text-sm font-mono">M1</span>
+                    Client Risk Profiling & Liquidity Constraint Assessment
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Socio-Economic status profiling and Active Surplus parsing layer for client mapping.</p>
+                <p class="text-xs text-slate-400 mt-1">Socio-economic parameters processing layer designed for explicit tactical active-surplus capital assignment.</p>
             </div>
 
             <form id="profilerForm" onsubmit="processRiskProfile(event)" class="space-y-8">
-                <!-- Part A -->
+                <!-- Parameters Row -->
                 <div>
-                    <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4">Part A: Risk Parameter Configuration</h3>
+                    <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-4">Section I: Risk Parameter Matrices</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">1. Age Bracket & Life Stage</label>
-                            <select id="stageAge" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
-                                <option value="W3">18–30 yrs (Early Wealth Acceleration Prospect)</option>
-                                <option value="W2" selected>25–40 yrs (Young Professional / Corporate Officer)</option>
-                                <option value="W1">50+ yrs (Capital Preservation Track)</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">Demographic Lifecycle Cohort</label>
+                            <select id="stageAge" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white font-medium">
+                                <option value="W3" selected>18–30 Years (Aggressive Wealth Acceleration Cycle)</option>
+                                <option value="W2">31–45 Years (Strategic Growth / Capital Augmentation Track)</option>
+                                <option value="W1">46+ Years (Capital Preservation & Sovereign Yield Preference)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">2. Desired Investment Horizon</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
-                                <option>1–3 Years (Short-term Tactical Allocation)</option>
-                                <option selected>2 Years Fixed Target Framework (Jan 2126 - Dec 2027)</option>
-                                <option>5+ Years (Strategic Core Position Cycle)</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">Investment Horizon Constraints</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white font-medium">
+                                <option>Tactical Horizon: 12-Month Liquidity Window</option>
+                                <option selected>Strategic Horizon: 2-Year Fixed Allocation Framework (Jan 2026 - Dec 2027)</option>
+                                <option>Cyclical Horizon: 5+ Year Macro Asset Cycle</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Part B -->
+                <!-- Metrics Row -->
                 <div class="border-t border-slate-700 pt-6">
-                    <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4">Part B: Financial Surplus Metrics Calculator</h3>
+                    <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-4">Section II: Cash Flow & Compliance Parameters</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">B1. Primary Source Track</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
-                                <option>Corporate Officer / Salaried Executive</option>
-                                <option>Business Enterprise / Entrepreneur</option>
-                                <option>Independent Consultant / Tech Professional</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">Primary Capital Inflow Vertical</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white font-medium">
+                                <option selected>Independent Enterprise / High-Growth Entrepreneurship</option>
+                                <option>Corporate Executive Remuneration / Salaried Track</option>
+                                <option>Professional Services / Global Advisory Operations</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">B2. Estimated Monthly Inflow (PKR)</label>
-                            <select id="monthlyIncomeVal" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white" onchange="calculateSurplus()">
+                            <label class="block text-xs font-medium text-slate-300 mb-2">Estimated Gross Monthly Inflow (PKR)</label>
+                            <select id="monthlyIncomeVal" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white font-mono" onchange="calculateSurplus()">
                                 <option value="100000">100,000</option>
                                 <option value="250000" selected>250,000</option>
                                 <option value="500000">500,000</option>
+                                <option value="1000000">1,000,000</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">B3. Monthly Core Outflows (PKR)</label>
-                            <input type="number" id="monthlyCommitments" value="90000" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white" oninput="calculateSurplus()">
+                            <label class="block text-xs font-medium text-slate-300 mb-2">Operational Maintenance Outflows (PKR)</label>
+                            <input type="number" id="monthlyCommitments" value="90000" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white font-mono" oninput="calculateSurplus()">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">B4. Projected Net Surplus Velocity</label>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">Modeled Net Surplus Capital Velocity</label>
                             <div class="w-full bg-slate-950 border border-slate-800 text-emerald-400 font-mono rounded px-3 py-2 text-xs flex justify-between items-center">
                                 <span id="surplusDisplay">PKR 160,000</span>
-                                <span class="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-sans">Active Run</span>
+                                <span class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-sans uppercase font-bold tracking-wider">Dynamic Compute</span>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2">B5. ATL Filer Validation Status</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
-                                <option value="filer">Active Taxpayer List (ATL Filer - Standard CGT)</option>
-                                <option value="nonfiler">Non-Filer Profile (Automatic Higher Deductions)</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">FBR Active Taxpayer Status Validation</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white font-medium">
+                                <option value="filer">Active Taxpayer List (ATL Filer - Baseline CGT Rules)</option>
+                                <option value="nonfiler">Non-Filer Category (Higher Penal WHT Regime Automatically Triggered)</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-6 py-2.5 rounded transition-colors shadow-lg cursor-pointer">
-                        Process and Activate Intelligence Model Matrix
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded transition-colors shadow-lg cursor-pointer">
+                        Initialize Risk Architecture Execution
                     </button>
                 </div>
             </form>
         </section>
 
-        <!-- LIVE APPLICATION RUNTIME DASHBOARD -->
+        <!-- LIVE STRATEGIC MODEL RUNTIME ENGINE -->
         <section id="appDashboard" class="hidden space-y-6">
             
-            <!-- CORE STRUCTURAL ALLOCATION SWITCH BANNER -->
-            <div class="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <!-- MODEL TARGET INDEX SWITCH LAYER -->
+            <div class="bg-slate-900/80 border border-slate-700 rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider">Active System Model Selection Integration</div>
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Active Allocation Blueprint Engine</div>
                     <div class="text-lg font-bold text-white mt-0.5 flex items-center gap-2">
-                        <span id="activeModelTitle" class="text-emerald-400 font-mono">W1 - Conservative Model Strategy</span>
-                        <span class="text-xs font-normal text-slate-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">PKR 10,000,000 Structural Base</span>
+                        <span id="activeModelTitle" class="text-emerald-400 font-mono">Processing...</span>
+                        <span class="text-xs font-normal text-slate-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">PKR 10,000,000 Reference Base</span>
                     </div>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
@@ -179,42 +185,42 @@
                 </div>
             </div>
 
-            <!-- SIX PROFESSIONAL PERFORMANCE KPI METRIC CARDS -->
+            <!-- ANCHOR FINANCIAL KPI METRICS MATRIX -->
             <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
-                <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-[11px] text-slate-400 font-medium uppercase">Principal Capital</div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow-md border border-slate-800">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Initial Base Capital</div>
                     <div class="text-base font-bold text-white font-mono mt-1">PKR 10,000,000</div>
                 </div>
-                <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-[11px] text-slate-400 font-medium uppercase">2-Yr Value</div>
-                    <div class="text-base font-bold text-blue-400 font-mono mt-1" id="kpi-projected">PKR 15,166,579</div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow-md border border-slate-800">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Projected Portfolio Value</div>
+                    <div class="text-base font-bold text-blue-400 font-mono mt-1" id="kpi-projected">-</div>
                 </div>
-                <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-[11px] text-slate-400 font-medium uppercase">Net Capital Gain</div>
-                    <div class="text-base font-bold text-white font-mono mt-1" id="kpi-capgain">PKR 4,391,592</div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow-md border border-slate-800">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Net Realizable Capital Gain</div>
+                    <div class="text-base font-bold text-white font-mono mt-1" id="kpi-capgain">-</div>
                 </div>
-                <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-[11px] text-slate-400 font-medium uppercase">Net Dividend</div>
-                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-dividend">PKR 592,340</div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow-md border border-slate-800">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Cumulative Yield (Dividends)</div>
+                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-dividend">-</div>
                 </div>
-                <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-[11px] text-slate-400 font-medium uppercase">Total Return</div>
-                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-totalreturn">49.8%</div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow-md border border-slate-800">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Absolute Performance</div>
+                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-totalreturn">-</div>
                 </div>
-                <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-[11px] text-slate-400 font-medium uppercase">2-Yr Implied CAGR</div>
-                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-cagr">22.3%</div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow-md border border-slate-800">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">2-Year Implied CAGR</div>
+                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-cagr">-</div>
                 </div>
             </div>
 
-            <!-- LIVE ANALYTICS DATA VISUALIZATION PLATFORM (SIDE-BY-SIDE) -->
+            <!-- GRAPHICAL METRICS FORECAST VISUALIZATION (SIDE-BY-SIDE) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Line Chart Box -->
+                <!-- Pipeline Growth Curve Chart -->
                 <div class="lg:col-span-2 bg-fintech-card rounded-xl p-5 flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
-                        <h3 class="text-sm font-semibold text-white flex items-center gap-1.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                            Growth Trajectory Pathway Simulation (Jan 2026 - Dec 2027)
+                            Simulated Capital Growth Vector Timeline (Jan 2026 - Dec 2027)
                         </h3>
                     </div>
                     <div class="h-64 w-full relative">
@@ -222,12 +228,12 @@
                     </div>
                 </div>
 
-                <!-- Pie Chart Box -->
+                <!-- Asset Weight Classification Donut Chart -->
                 <div class="bg-fintech-card rounded-xl p-5 flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
-                        <h3 class="text-sm font-semibold text-white flex items-center gap-1.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            Bucket Weight Allocation Matrix
+                            Structural Asset Basket Allocations
                         </h3>
                     </div>
                     <div class="h-64 w-full relative flex items-center justify-center">
@@ -236,113 +242,112 @@
                 </div>
             </div>
 
-            <!-- BENCHMARK OUTPERFORM BANNER -->
-            <div id="trafficLightBanner" class="p-3 rounded-lg text-center font-bold text-xs border bg-slate-900 border-slate-700">
-                Processing Assessment...
+            <!-- PERFORMANCE COMPLIANCE VERIFICATION BANNER -->
+            <div id="trafficLightBanner" class="p-3 rounded-lg text-center font-mono font-bold text-xs border bg-slate-900 border-slate-700 tracking-wide">
+                Executing Predictive Quant Modeling Systems...
             </div>
 
-            <!-- COMPLETE 28 REFERENCE STOCKS STRUCTURAL DATA LISTING -->
-            <div class="bg-fintech-card rounded-xl p-5 shadow-lg">
-                <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
-                    <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                        <span class="p-1 bg-amber-500/10 text-amber-400 rounded text-xs">M3</span>
-                        Reference Stock Universe & Performance Metrics (28 Active PSX Assets)
+            <!-- UNIVERSAL PSX STOCK REGISTRY DATA MATRIX -->
+            <div class="bg-fintech-card rounded-xl p-5 shadow-lg border border-slate-700">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-slate-700 pb-3 gap-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                        <span class="p-1 bg-amber-500/10 text-amber-400 rounded text-xs font-mono">M3</span>
+                        Equity Universe Analytics Matrix (28 Actively Maintained PSX Reference Assets)
                     </h3>
-                    <div class="text-xs text-slate-400 font-mono" id="allocation-summary-text">
-                        Loading proportions...
+                    <div class="text-xs text-slate-400 font-mono tracking-wide" id="allocation-summary-text">
+                        Loading...
                     </div>
                 </div>
 
                 <div class="overflow-x-auto max-h-96 border border-slate-800 rounded">
                     <table class="w-full text-left text-xs border-collapse">
-                        <thead class="sticky top-0 z-10 bg-slate-900 text-slate-400 text-[11px] uppercase border-b border-slate-700">
+                        <thead class="sticky top-0 z-10 bg-slate-900 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-700">
                             <tr>
-                                <th class="p-3">Ticker</th>
-                                <th class="p-3">Company Name</th>
-                                <th class="p-3">Bucket Allocation</th>
-                                <th class="p-3">Core Sector</th>
-                                <th class="p-3">FY Closing</th>
-                                <th class="p-3">EPS Audit Metric</th>
-                                <th class="p-3">Target Volatility (Beta)</th>
+                                <th class="p-3">Ticker Identification</th>
+                                <th class="p-3">Asset Legal Title</th>
+                                <th class="p-3">Strategic Allocation Classification</th>
+                                <th class="p-3">Sector Categorization</th>
+                                <th class="p-3">Financial Closing Anchor</th>
+                                <th class="p-3">Audited Earnings Metric (EPS)</th>
+                                <th class="p-3">Beta Co-efficient Volatility</th>
                             </tr>
                         </thead>
                         <tbody id="stocksTableBody" class="divide-y divide-slate-800">
-                            <!-- Injected Dynamically by JavaScript -->
+                            <!-- Populated Injectively via Logic Model -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- REGULATORY TAX COMPLIANCE SUB-LAYER -->
+            <!-- REGULATORY ENVIRONMENT DATA MATRIX -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs">
                 <div>
-                    <h4 class="font-bold text-amber-500 mb-1">Capital Gains Tax (CGT) Framework</h4>
-                    <p class="text-slate-400">Mandatory NCCPL asset holding period parsing engine active. Section 7E has been eliminated from active metric layers.</p>
+                    <h4 class="font-bold text-amber-500 mb-1 uppercase tracking-wider text-[10px]">NCCPL Capital Gains Framework (CGT)</h4>
+                    <p class="text-slate-400 leading-relaxed">System holds absolute processing rules aligned with asset tenure holding durations. Section 7E metrics are fully decoupled from live computations.</p>
                 </div>
                 <div>
-                    <h4 class="font-bold text-emerald-500 mb-1">Dividend WHT Execution Rules</h4>
-                    <p class="text-slate-400">15% withholding safe tax deduction applied for verified Active Taxpayers (ATL) at source boundaries.</p>
+                    <h4 class="font-bold text-emerald-500 mb-1 uppercase tracking-wider text-[10px]">Dividend Withholding Tax Regime (WHT)</h4>
+                    <p class="text-slate-400 leading-relaxed">A standard 15% statutory deduction is simulated at source boundary conditions for users possessing validated ATL Filer credentials.</p>
                 </div>
                 <div>
-                    <h4 class="font-bold text-rose-500 mb-1">Non-Filer Profile Impact Engine</h4>
-                    <p class="text-slate-400">System architecture automatically registers alternative multi-rate penalties if configuration shifts to non-filer mode.</p>
+                    <h4 class="font-bold text-rose-500 mb-1 uppercase tracking-wider text-[10px]">Non-Filer Structural Penalty Protocols</h4>
+                    <p class="text-slate-400 leading-relaxed">If the Filer status verification changes, structural sub-layers automatically compute statutory differential tax penalties.</p>
                 </div>
             </div>
 
         </section>
     </main>
 
-    <!-- SYSTEM FOOTER -->
-    <footer class="max-w-7xl w-full mx-auto text-center py-6 text-[11px] text-slate-500 border-t border-slate-800 mt-12">
-        <p>Developed strictly for professional asset educational metrics and corporate training. Capital market products involve absolute pricing risks.</p>
+    <!-- INTELLECTUAL PROPERTY & COMPLIANCE FOOTER -->
+    <footer class="max-w-7xl w-full mx-auto text-center py-6 text-[10px] text-slate-500 font-medium border-t border-slate-800 mt-12 uppercase tracking-widest">
+        <p>Confidential Corporate Training Matrix. Strategic asset valuations involve inherent systemic risks and pricing variance parameters.</p>
     </footer>
 
-    <!-- RUNTIME LOGIC SCRIPT ENGINE -->
+    <!-- STRATEGIC ENGINE EXECUTABLE LAYER -->
     <script>
-        // Exact 3 Model Specifications Dataset Mapping
+        // Allocation Mapping Matrix Datasets
         const modelData = {
             W1: {
-                name: "W1 - Conservative Model Strategy",
+                name: "W1 - Conservative Capital Preservation Strategy",
                 principal: "PKR 10,000,000",
                 projectedValue: "PKR 15,166,579",
                 capgain: "PKR 4,391,592",
                 dividend: "PKR 592,340",
                 totalreturn: "49.8%",
                 cagr: "22.3%",
-                allocationText: "High Yield: 20% | High Growth: 75% | Trending: 5%",
+                allocationText: "High Yield: 20% | High Growth: 75% | Trending Portfolio Alpha: 5%",
                 weights: [20, 75, 5],
                 trajectory: [10000000, 11150000, 12380000, 13750000, 15166579],
-                status: "🟡 STABLE MATCH (Portfolio Model v2.2 +49.8% Outperforming Baseline Target Framework)"
+                status: "🟡 BALANCED PROFILE MATCH (Portfolio Architecture Strategy v2.2 Outperforming Target Baseline Framework)"
             },
             W2: {
-                name: "W2 - Moderate Model Strategy",
+                name: "W2 - Balanced Alpha Generation Strategy",
                 principal: "PKR 10,000,000",
                 projectedValue: "PKR 14,762,928",
                 capgain: "PKR 4,048,488",
                 dividend: "PKR 760,337",
                 totalreturn: "48.1%",
                 cagr: "21.6%",
-                allocationText: "High Yield: 50% | High Growth: 40% | Trending: 10%",
+                allocationText: "High Yield: 50% | High Growth: 40% | Trending Portfolio Alpha: 10%",
                 weights: [50, 40, 10],
                 trajectory: [10000000, 11020000, 12150000, 13390000, 14762928],
-                status: "🟢 ACTIVE OUTPERFORM (Portfolio Model v2.2 +48.1% vs High Alpha Trajectory Performance Metrics)"
+                status: "🟢 COMPLIANT STRATEGIC ALPHA (High Consistency Metrics vs Composite Institutional Benchmarks)"
             },
             W3: {
-                name: "W3 - Aggressive Model Strategy",
+                name: "W3 - Aggressive Velocity Volatility Strategy",
                 principal: "PKR 10,000,000",
                 projectedValue: "PKR 14,915,676",
                 capgain: "PKR 4,178,325",
                 dividend: "PKR 637,014",
                 totalreturn: "48.2%",
                 cagr: "21.7%",
-                allocationText: "High Yield: 30% | High Growth: 50% | Trending: 20%",
+                allocationText: "High Yield: 30% | High Growth: 50% | Trending Portfolio Alpha: 20%",
                 weights: [30, 50, 20],
                 trajectory: [10000000, 11080000, 12220000, 13510000, 14915676],
-                status: "🔥 HIGH VELOCITY ENGINE (Portfolio Model v2.2 +48.2% Maximum Momentum Alpha Deployment)"
+                status: "🔥 MAXIMUM MOMENTUM DEPLOYMENT (High-Velocity Multi-Asset Quant Engine Active)"
             }
         };
 
-        // Complete 28 Stock Database Array
         const stockUniverse = [
             { ticker: "FFC", name: "Fauji Fertilizer Company", bucket: "High Yield", sector: "Fertilizer", fy: "31-Dec", eps: "Rs 45.89 (Aud)", beta: "0.98" },
             { ticker: "MCB", name: "MCB Bank Limited", bucket: "High Yield", sector: "Banking", fy: "31-Dec", eps: "Rs 48.62 (Aud)", beta: "0.87" },
@@ -376,75 +381,82 @@
 
         let trajectoryChart = null;
         let allocationChart = null;
-        let authMode = 'signup';
+        let authMode = 'signup'; // Enforce registration as baseline entrance landing
 
         window.onload = function() {
             calculateSurplus();
             populateStocksTable();
-            
-            const savedUser = localStorage.getItem('currentMajidUser');
-            if (savedUser) { switchAuthModeToLogin(); }
+            setAuthMode('signup'); 
         };
 
-        // AUTH LAYER LOGIC
-        function toggleAuthMode() {
-            if (authMode === 'signup') { switchAuthModeToLogin(); } 
-            else { switchAuthModeToSignUp(); }
-        }
+        // VISUAL SYSTEM ACCESS MODE SWITCH
+        function setAuthMode(mode) {
+            authMode = mode;
+            const tabLogin = document.getElementById('tabLogin');
+            const tabSignup = document.getElementById('tabSignup');
+            const fullNameGroup = document.getElementById('fullNameGroup');
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
 
-        function switchAuthModeToLogin() {
-            authMode = 'login';
-            document.getElementById('authTitle').innerText = "Account Secure Login";
-            document.getElementById('authSubtitle').innerText = "Enter authorization parameters to resume evaluation";
-            document.getElementById('fullNameGroup').classList.add('hidden');
-            document.getElementById('authSubmitBtn').innerText = "Secure Authorization Authorization";
-            document.getElementById('toggleText').innerText = "New environment?";
-            document.getElementById('toggleAuthBtn').innerText = "Create Fresh Account";
-        }
-
-        function switchAuthModeToSignUp() {
-            authMode = 'signup';
-            document.getElementById('authTitle').innerText = "Create Your Account";
-            document.getElementById('fullNameGroup').classList.remove('hidden');
-            document.getElementById('authSubmitBtn').innerText = "Register & Initialize Environment";
-        }
-
-        function handleAuthSubmit(event) {
-            event.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value;
-
-            if (authMode === 'signup') {
-                const name = document.getElementById('authName').value.trim() || "Muhammad Majid";
-                localStorage.setItem('currentMajidUser', JSON.stringify({ name, email, password }));
-                enterAppWorkspace(name);
+            if (mode === 'login') {
+                tabLogin.className = "flex-1 pb-2 text-xs font-bold tracking-wider uppercase border-b-2 text-emerald-400 border-emerald-500 cursor-pointer text-center";
+                tabSignup.className = "flex-1 pb-2 text-xs font-bold tracking-wider uppercase border-b-2 text-slate-400 border-transparent hover:text-white cursor-pointer text-center";
+                fullNameGroup.classList.add('hidden');
+                authSubmitBtn.innerText = "Authorize & Enter Terminal";
             } else {
-                const storedData = localStorage.getItem('currentMajidUser');
-                if (storedData) {
-                    const user = JSON.parse(storedData);
-                    if (user.email === email && user.password === password) {
-                        enterAppWorkspace(user.name);
-                    } else { alert("Error: Security Authorization Failure."); }
-                } else { alert("No configuration logs found. Please sign up."); }
+                tabSignup.className = "flex-1 pb-2 text-xs font-bold tracking-wider uppercase border-b-2 text-emerald-400 border-emerald-500 cursor-pointer text-center";
+                tabLogin.className = "flex-1 pb-2 text-xs font-bold tracking-wider uppercase border-b-2 text-slate-400 border-transparent hover:text-white cursor-pointer text-center";
+                fullNameGroup.classList.remove('hidden');
+                authSubmitBtn.innerText = "Generate Fresh Quant Credentials";
             }
         }
 
-        function enterAppWorkspace(username) {
+        // AUTH DATA PERSISTENCE LAYER (MANDATORY VERIFICATION)
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('authEmail').value.trim();
+            const passwordInput = document.getElementById('authPassword').value;
+
+            if (authMode === 'login') {
+                // Read exclusively from runtime localStorage engine
+                const storedRecord = localStorage.getItem('quant_user_db');
+                if (storedRecord) {
+                    const parsedCreds = JSON.parse(storedRecord);
+                    if (parsedCreds.username === usernameInput && parsedCreds.password === passwordInput) {
+                        enterAppWorkspace(parsedCreds.name);
+                        return;
+                    }
+                }
+                alert("Access Denied: Invalid Security Passphrase or Unrecognized Identifier Matrix.");
+            } else {
+                // Save user explicitly 
+                const nameInput = document.getElementById('authName').value.trim() || "Pro Analyst";
+                if (!usernameInput || !passwordInput) {
+                    alert("Validation Error: All tracking structures must be populated.");
+                    return;
+                }
+                localStorage.setItem('quant_user_db', JSON.stringify({ name: nameInput, username: usernameInput, password: passwordInput }));
+                alert("Security Credentials Encrypted & Registered successfully! Proceeding to Secure Portal Login.");
+                setAuthMode('login');
+            }
+        }
+
+        function enterAppWorkspace(verifiedName) {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainHeader').classList.remove('hidden');
             document.getElementById('onboardingScreen').classList.remove('hidden');
-            document.getElementById('welcomeUser').innerText = "Welcome, " + username + "!";
+            document.getElementById('welcomeUser').innerText = "Account Holder: " + verifiedName;
         }
 
         function handleLogout() {
             document.getElementById('mainHeader').classList.add('hidden');
             document.getElementById('onboardingScreen').classList.add('hidden');
             document.getElementById('appDashboard').classList.add('hidden');
-            switchAuthModeToLogin();
+            setAuthMode('signup');
             document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('authForm').reset();
         }
 
-        // SURPLUS METRIC CALCULATION
+        // DEEPLY SYNCED NUMERICAL ENGINE DATA RUNS
         function calculateSurplus() {
             const gross = parseFloat(document.getElementById('monthlyIncomeVal').value) || 0;
             const commitments = parseFloat(document.getElementById('monthlyCommitments').value) || 0;
@@ -457,21 +469,17 @@
             document.getElementById('onboardingScreen').classList.add('hidden');
             document.getElementById('appDashboard').classList.remove('hidden');
             
-            // Pre-initialize standard charts safely
             initTrajectoryChart();
             initAllocationChart();
             
-            // Switch to default suggested system tier
             const suggestedTier = document.getElementById('stageAge').value;
             switchActiveModel(suggestedTier); 
         }
 
-        // TRULY LIVE SYNCHRONIZED CHARTS & CONFIG ENGINE
         function switchActiveModel(modelCode) {
             const data = modelData[modelCode];
             if (!data) return;
 
-            // 1. Update text variables smoothly
             document.getElementById('activeModelTitle').innerText = data.name;
             document.getElementById('kpi-projected').innerText = data.projectedValue;
             document.getElementById('kpi-capgain').innerText = data.capgain;
@@ -481,7 +489,6 @@
             document.getElementById('allocation-summary-text').innerText = data.allocationText;
             document.getElementById('trafficLightBanner').innerText = data.status;
 
-            // 2. Synchronize navigation buttons highlights
             ['W1', 'W2', 'W3'].forEach(m => {
                 const btn = document.getElementById('btn' + m);
                 if (m === modelCode) {
@@ -491,7 +498,6 @@
                 }
             });
 
-            // 3. Trigger live canvas animation update sequences
             if (trajectoryChart) {
                 trajectoryChart.data.datasets[0].data = data.trajectory;
                 if(modelCode === 'W1') trajectoryChart.data.datasets[0].borderColor = '#3b82f6';
@@ -506,24 +512,23 @@
             }
         }
 
-        // INITIALIZE LINE TRAJECTORY PROJECTION
         function initTrajectoryChart() {
             if (trajectoryChart !== null) return;
             const ctx = document.getElementById('trajectoryChart').getContext('2d');
             trajectoryChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['1 Jan 2026', '30 Jun 2026', '31 Dec 2026', '30 Jun 2027', '31 Dec 2027'],
+                    labels: ['Jan 2026 Base', 'Jun 2026 Matrix', 'Dec 2026 Cycle', 'Jun 2027 Run', 'Dec 2027 Terminus'],
                     datasets: [{
-                        label: 'Asset Capital Growth Pipeline (PKR)',
+                        label: 'Asset Target Run-Rate (PKR)',
                         data: modelData.W1.trajectory,
                         borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(30, 41, 59, 0.2)',
+                        backgroundColor: 'rgba(30, 41, 59, 0.1)',
                         borderWidth: 3,
                         fill: true,
-                        tension: 0.35,
+                        tension: 0.3,
                         pointBackgroundColor: '#fff',
-                        pointRadius: 5
+                        pointRadius: 4
                     }]
                 },
                 options: {
@@ -538,14 +543,13 @@
             });
         }
 
-        // INITIALIZE PIE WEIGHT ALLOCATION PROPORTIONS
         function initAllocationChart() {
             if (allocationChart !== null) return;
             const ctx = document.getElementById('allocationChart').getContext('2d');
             allocationChart = new Chart(ctx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
-                    labels: ['High Yield Bucket', 'High Growth Bucket', 'Trending Bucket'],
+                    labels: ['High Yield Structure', 'High Growth Segment', 'Trending Macro Beta'],
                     datasets: [{
                         data: modelData.W1.weights,
                         backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
@@ -559,14 +563,14 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#94a3b8', font: { size: 11 } }
+                            labels: { color: '#94a3b8', font: { size: 10 } }
                         }
-                    }
+                    },
+                    cutout: '70%'
                 }
             });
         }
 
-        // RENDER COMPLETE 28 REFERENCE STOCKS
         function populateStocksTable() {
             const tbody = document.getElementById('stocksTableBody');
             tbody.innerHTML = "";
