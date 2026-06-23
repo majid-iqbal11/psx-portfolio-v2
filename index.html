@@ -3,809 +3,592 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Analyzer & Investor Education Guide v2.2</title>
+    <title>Portfolio Analyzer & Investor Education Guide v2.5 Premium</title>
+    <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js CDN for Analytics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-        .neon-accent { color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
         .bg-fintech-card { background-color: #1e293b; border: 1px solid #334155; }
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen">
+<body class="p-4 md:p-8 min-h-screen flex flex-col justify-between">
 
-    <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-slate-700 gap-4">
+    <!-- TOP NAVIGATION HEADER -->
+    <header id="mainHeader" class="hidden max-w-7xl w-full mx-auto flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-slate-700 gap-4">
         <div>
             <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
                 <span>PORTFOLIO ANALYZER</span> 
-                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">v2.2 Spec Aligned</span>
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">v2.5 Live Matrix</span>
             </h1>
             <p class="text-xs text-slate-400" id="subHeader">Capital Markets Education & Portfolio Guidance Platform | Prepared by Kashan Kazmi</p>
         </div>
         
         <div class="flex items-center gap-4">
-            <button onclick="toggleLanguage()" id="langBtn" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded font-medium border border-slate-600 transition-colors">
-                اردو میں تبدیل کریں
-            </button>
             <div class="text-xs text-slate-400 text-right">
+                <div id="welcomeUser" class="text-emerald-400 font-semibold mb-1">Welcome, User!</div>
                 <div><strong>Base Date:</strong> 1 Jan 2026</div>
-                <div><strong>System Time:</strong> June 2026 (FY27 Budget)</div>
+                <div><strong>System Time:</strong> June 2026</div>
             </div>
+            <button onclick="handleLogout()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs px-2.5 py-1.5 rounded border border-rose-500/20 transition-colors cursor-pointer">
+                Logout
+            </button>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto">
+    <!-- AUTHENTICATION LAYER -->
+    <section id="authScreen" class="max-w-md w-full mx-auto my-auto bg-fintech-card rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 transition-all">
+        <div class="text-center mb-6">
+            <div class="inline-flex p-3 bg-emerald-500/10 text-emerald-400 rounded-xl mb-3 border border-emerald-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h2 id="authTitle" class="text-xl font-bold text-white tracking-tight">Create Your Account</h2>
+            <p id="authSubtitle" class="text-xs text-slate-400 mt-1">Join the CFA-Aligned Knowledge Workspace</p>
+        </div>
+
+        <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+            <div id="fullNameGroup">
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
+                <input type="text" id="authName" placeholder="Muhammad Majid" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Email or Username</label>
+                <input type="text" id="authEmail" required placeholder="majid@example.com" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
+                <input type="password" id="authPassword" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
+            </div>
+            <button type="submit" id="authSubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2.5 rounded transition-colors shadow-lg cursor-pointer mt-2">
+                Register & Initialize Environment
+            </button>
+        </form>
+
+        <div class="text-center mt-6 text-xs text-slate-400 border-t border-slate-800 pt-4">
+            <span id="toggleText">Already have an account?</span>
+            <button onclick="toggleAuthMode()" id="toggleAuthBtn" class="text-emerald-400 font-semibold hover:underline ml-1 cursor-pointer">Login Here</button>
+        </div>
+    </section>
+
+    <!-- MAIN INTERACTIVE WORKSPACE -->
+    <main class="max-w-7xl w-full mx-auto">
         
-        <section id="onboardingScreen" class="bg-fintech-card rounded-xl p-6 mb-8 shadow-xl">
+        <!-- MODULE 1: ONBOARDING & FINANCIAL RISK CAPACITY ASSESSMENT -->
+        <section id="onboardingScreen" class="hidden bg-fintech-card rounded-xl p-6 mb-8 shadow-xl">
             <div class="border-b border-slate-700 pb-4 mb-6">
-                <h2 class="text-lg font-semibold text-white flex items-center gap-2" id="onboardTitle">
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                     <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded">M1</span>
-                    User Onboarding, Risk Profiling & Financial Capacity Assessment
+                    User Onboarding, Risk Profiling & Capacity Engine
                 </h2>
-                <p class="text-xs text-slate-400 mt-1" id="onboardDesc">Both Part A (General Risk Profile) and Part B (Client Income Assessment) are mandatory to activate the advisor recommendations layer.</p>
+                <p class="text-xs text-slate-400 mt-1">Socio-Economic status profiling and Active Surplus parsing layer for client mapping.</p>
             </div>
 
             <form id="profilerForm" onsubmit="processRiskProfile(event)" class="space-y-8">
+                <!-- Part A -->
                 <div>
-                    <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4" id="partATitle">Part A: General Risk Evaluation</h3>
+                    <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4">Part A: Risk Parameter Configuration</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qA1">1. Age Bracket & Life Stage</label>
-                            <select id="stageAge" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500">
-                                <option value="3">18–30 yrs (Student / Early Career)</option>
-                                <option value="2.5">25–40 yrs (Young Professional / Entrepreneur)</option>
-                                <option value="2">35–55 yrs (Mid-Career / Family)</option>
-                                <option value="1.5">50–65 yrs (Pre-Retirement)</option>
-                                <option value="1">60–80 yrs (Retiree / Senior Office)</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">1. Age Bracket & Life Stage</label>
+                            <select id="stageAge" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
+                                <option value="W3">18–30 yrs (Early Wealth Acceleration Prospect)</option>
+                                <option value="W2" selected>25–40 yrs (Young Professional / Corporate Officer)</option>
+                                <option value="W1">50+ yrs (Capital Preservation Track)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qA2">2. Investment Horizon Tenure</label>
-                            <select id="tenureHorizon" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500">
-                                <option value="1">&lt; 1 Year (High Turnover / Cyclic)</option>
-                                <option value="2">1–3 Years (Short-term Hybrid)</option>
-                                <option value="2.5">3–7 Years (Medium Balanced)</option>
-                                <option value="3">7+ Years (Long-term Buy-and-Hold Strategy)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qA3">3. Primary Objective</label>
-                            <select id="primaryObjective" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500">
-                                <option value="3">Wealth Acceleration / High Capital Growth</option>
-                                <option value="2.5">Balanced Growth + Secondary Income Portfolio</option>
-                                <option value="1.5">Regular Inflation-beating Passive Income</option>
-                                <option value="1">Strict Capital Preservation</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qA4">4. Reaction to a 20% Market Drop in 3 Months</label>
-                            <select id="marketReaction" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500">
-                                <option value="1">Panic / Sell everything to protect capital</option>
-                                <option value="2">Anxious / Do nothing, hold and wait for recovery</option>
-                                <option value="3">Opportunistic / Deploy more cash to buy deep-value stocks</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">2. Desired Investment Horizon</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
+                                <option>1–3 Years (Short-term Tactical Allocation)</option>
+                                <option selected>2 Years Fixed Target Framework (Jan 2126 - Dec 2027)</option>
+                                <option>5+ Years (Strategic Core Position Cycle)</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
+                <!-- Part B -->
                 <div class="border-t border-slate-700 pt-6">
-                    <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4" id="partBTitle">Part B: Financial Capacity & Income Assessment</h3>
+                    <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4">Part B: Financial Surplus Metrics Calculator</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qB1">B1. Primary Employment Status</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500">
-                                <option>Salaried (Private Sector)</option>
-                                <option>Salaried (Government / Institutional)</option>
-                                <option>Business Owner / Entrepreneur</option>
-                                <option>Self-Employed Freelancer</option>
-                                <option>Retired Personnel</option>
-                                <option>Student / Private Candidate</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">B1. Primary Source Track</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
+                                <option>Corporate Officer / Salaried Executive</option>
+                                <option>Business Enterprise / Entrepreneur</option>
+                                <option>Independent Consultant / Tech Professional</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qB2">B2. Monthly Gross Income (PKR)</label>
-                            <select id="monthlyIncomeVal" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" onchange="calculateSurplus()">
-                                <option value="40000">&lt; 50,000</option>
-                                <option value="80000">50,000 – 100,000</option>
-                                <option value="180000">100,001 – 250,000</option>
-                                <option value="380000" selected>250,001 – 500,000</option>
-                                <option value="750000">500,001 – 1,000,000</option>
-                                <option value="1500000">&gt; 1,000,000</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">B2. Estimated Monthly Inflow (PKR)</label>
+                            <select id="monthlyIncomeVal" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white" onchange="calculateSurplus()">
+                                <option value="100000">100,000</option>
+                                <option value="250000" selected>250,000</option>
+                                <option value="500000">500,000</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qB3">B3. Fixed Monthly Commitments (PKR)</label>
-                            <input type="number" id="monthlyCommitments" value="120000" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" oninput="calculateSurplus()">
+                            <label class="block text-xs font-medium text-slate-300 mb-2">B3. Monthly Core Outflows (PKR)</label>
+                            <input type="number" id="monthlyCommitments" value="90000" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white" oninput="calculateSurplus()">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qB4">B4. Net Monthly Investable Surplus</label>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">B4. Projected Net Surplus Velocity</label>
                             <div class="w-full bg-slate-950 border border-slate-800 text-emerald-400 font-mono rounded px-3 py-2 text-xs flex justify-between items-center">
-                                <span id="surplusDisplay">PKR 260,000</span>
-                                <span id="surplusClass" class="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-sans">Retail</span>
+                                <span id="surplusDisplay">PKR 160,000</span>
+                                <span class="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-sans">Active Run</span>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qB5">B5. FBR Active Taxpayer Status (ATL)</label>
-                            <select id="filerStatus" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" onchange="updateTaxEngineUI()">
-                                <option value="filer" selected>Active Taxpayer (Filer) - Standard Slabs</option>
-                                <option value="nonfiler">Non-Filer (Double CGT & Tenth Schedule Penalty)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-2" id="qB6">B6. Financial Literacy Level</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs focus:outline-none focus:border-emerald-500">
-                                <option value="beginner">Beginner (Needs Urdu Tooltips & Simplified Gauge)</option>
-                                <option value="intermediate" selected>Intermediate (Understand Valuations & Models)</option>
-                                <option value="advanced">Advanced (Sharpe, Sortino, & Info Ratio Unlocked)</option>
+                            <label class="block text-xs font-medium text-slate-300 mb-2">B5. ATL Filer Validation Status</label>
+                            <select class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-xs text-white">
+                                <option value="filer">Active Taxpayer List (ATL Filer - Standard CGT)</option>
+                                <option value="nonfiler">Non-Filer Profile (Automatic Higher Deductions)</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-2 text-xs text-slate-300 bg-slate-900/50 p-3 rounded border border-slate-800">
-                    <input type="checkbox" required id="riskAck" class="mt-0.5 rounded text-emerald-500 focus:ring-0">
-                    <label for="riskAck" id="ackText">
-                        <strong>Mandatory Acknowledgement:</strong> I understand that this platform serves exclusively as an advisory intelligence layer. It does not execute transactions or hold custodian assets. Equity instruments carry a clear risk of principal impairment under volatile conditions.
-                    </label>
-                </div>
-
                 <div class="flex justify-end">
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-6 py-2.5 rounded transition-colors shadow-lg">
-                        Generate Recommended Model Allocation Matrix
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-6 py-2.5 rounded transition-colors shadow-lg cursor-pointer">
+                        Process and Activate Intelligence Model Matrix
                     </button>
                 </div>
             </form>
         </section>
 
+        <!-- LIVE APPLICATION RUNTIME DASHBOARD -->
         <section id="appDashboard" class="hidden space-y-6">
             
-            <div class="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <!-- CORE STRUCTURAL ALLOCATION SWITCH BANNER -->
+            <div class="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider" id="modelAlertLabel">System Model Selection Engine Recommendation</div>
+                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider">Active System Model Selection Integration</div>
                     <div class="text-lg font-bold text-white mt-0.5 flex items-center gap-2">
-                        <span id="recommendedModelBadge" class="text-emerald-400 font-mono">W2 - Moderate Risk Profile</span>
-                        <span class="text-xs font-normal text-slate-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20" id="mandateLabel">PKR 10,000,000 Illustrative Mandate</span>
+                        <span id="activeModelTitle" class="text-emerald-400 font-mono">W1 - Conservative Model Strategy</span>
+                        <span class="text-xs font-normal text-slate-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">PKR 10,000,000 Structural Base</span>
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="switchActiveModel('W1')" class="px-3 py-1.5 rounded text-xs border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 font-mono">W1</button>
-                    <button onclick="switchActiveModel('W2')" class="px-3 py-1.5 rounded text-xs border-2 border-emerald-500 bg-emerald-950/60 text-emerald-400 font-bold font-mono">W2</button>
-                    <button onclick="switchActiveModel('W3')" class="px-3 py-1.5 rounded text-xs border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 font-mono">W3</button>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button id="btnW1" onclick="switchActiveModel('W1')" class="flex-1 md:flex-none px-4 py-2 rounded text-xs font-bold font-mono border transition-all cursor-pointer">W1 Model</button>
+                    <button id="btnW2" onclick="switchActiveModel('W2')" class="flex-1 md:flex-none px-4 py-2 rounded text-xs font-bold font-mono border transition-all cursor-pointer">W2 Model</button>
+                    <button id="btnW3" onclick="switchActiveModel('W3')" class="flex-1 md:flex-none px-4 py-2 rounded text-xs font-bold font-mono border transition-all cursor-pointer">W3 Model</button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- SIX PROFESSIONAL PERFORMANCE KPI METRIC CARDS -->
+            <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
                 <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-xs text-slate-400 font-medium" id="cardM1">Principal Portfolio Mandate</div>
-                    <div class="text-xl font-bold text-white font-mono mt-1">PKR 10,000,000</div>
-                    <div class="text-[10px] text-slate-500 mt-1">Anchored Base: 1 January 2026</div>
+                    <div class="text-[11px] text-slate-400 font-medium uppercase">Principal Capital</div>
+                    <div class="text-base font-bold text-white font-mono mt-1">PKR 10,000,000</div>
                 </div>
                 <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-xs text-slate-400 font-medium" id="cardM2">Projected Horizon Return (2-Yr Net)</div>
-                    <div class="text-xl font-bold text-emerald-400 font-mono mt-1" id="mProjValue">PKR 14,762,928</div>
-                    <div class="text-[10px] text-emerald-500 mt-1 font-mono" id="mProjPct">Total Growth: +48.1%</div>
+                    <div class="text-[11px] text-slate-400 font-medium uppercase">2-Yr Value</div>
+                    <div class="text-base font-bold text-blue-400 font-mono mt-1" id="kpi-projected">PKR 15,166,579</div>
                 </div>
                 <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-xs text-slate-400 font-medium" id="cardM3">Net Capital Gain (After FY27 CGT)</div>
-                    <div class="text-xl font-bold text-white font-mono mt-1" id="mCapGain">PKR 4,048,488</div>
-                    <div class="text-[10px] text-slate-500 mt-1" id="mCgtNotice">NCCPL Automated Lot Splitting</div>
+                    <div class="text-[11px] text-slate-400 font-medium uppercase">Net Capital Gain</div>
+                    <div class="text-base font-bold text-white font-mono mt-1" id="kpi-capgain">PKR 4,391,592</div>
                 </div>
                 <div class="bg-fintech-card rounded-xl p-4 shadow">
-                    <div class="text-xs text-slate-400 font-medium" id="cardM4">Accrued Dividend Yield Income (Net)</div>
-                    <div class="text-xl font-bold text-emerald-400 font-mono mt-1" id="mDivIncome">PKR 760,337</div>
-                    <div class="text-[10px] text-slate-500 mt-1" id="mWhtNotice">15% WHT Deducted at Source</div>
+                    <div class="text-[11px] text-slate-400 font-medium uppercase">Net Dividend</div>
+                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-dividend">PKR 592,340</div>
+                </div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow">
+                    <div class="text-[11px] text-slate-400 font-medium uppercase">Total Return</div>
+                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-totalreturn">49.8%</div>
+                </div>
+                <div class="bg-fintech-card rounded-xl p-4 shadow">
+                    <div class="text-[11px] text-slate-400 font-medium uppercase">2-Yr Implied CAGR</div>
+                    <div class="text-base font-bold text-emerald-400 font-mono mt-1" id="kpi-cagr">22.3%</div>
                 </div>
             </div>
 
+            <!-- LIVE ANALYTICS DATA VISUALIZATION PLATFORM (SIDE-BY-SIDE) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Line Chart Box -->
                 <div class="lg:col-span-2 bg-fintech-card rounded-xl p-5 flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
-                        <h3 class="text-sm font-semibold text-white flex items-center gap-1.5" id="growthTitle">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            Linear vs Exponential Horizon Trajectory Projections
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            Growth Trajectory Pathway Simulation (Jan 2026 - Dec 2027)
                         </h3>
-                        <span class="text-xs font-mono text-slate-400" id="impliedCagr">Implied 2-Yr CAGR: ~21.6%</span>
                     </div>
                     <div class="h-64 w-full relative">
                         <canvas id="trajectoryChart"></canvas>
                     </div>
                 </div>
 
-                <div class="bg-fintech-card rounded-xl p-5 flex flex-col">
+                <!-- Pie Chart Box -->
+                <div class="bg-fintech-card rounded-xl p-5 flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
-                        <h3 class="text-sm font-semibold text-white" id="benchTitle">Benchmark Performance Scorecard</h3>
-                        <select id="cutoffSelector" onchange="changeCutoffView()" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] focus:outline-none">
-                            <option value="si">Since Inception (1 Jan 2026)</option>
-                            <option value="ytd">FY26 YTD View</option>
-                            <option value="m3">Last 3 Months View</option>
-                            <option value="m1">Last 1 Month View</option>
-                        </select>
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Bucket Weight Allocation Matrix
+                        </h3>
                     </div>
-                    
-                    <div id="trafficLightBanner" class="p-3 rounded-lg text-center font-bold text-xs mb-4 border bg-emerald-950/60 border-emerald-500/40 text-emerald-400">
-                        🟢 OUTPERFORM (Portfolio +48.1% vs Benchmark Index +41.2%)
-                    </div>
-
-                    <div class="space-y-3 flex-1 overflow-y-auto text-xs">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                            <span class="text-slate-300 font-medium">KSE-100 Index Return</span>
-                            <span class="font-mono text-white font-semibold">+41.2%</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                            <span class="text-slate-300 font-medium">KSE-30 Index Return</span>
-                            <span class="font-mono text-white font-semibold">+38.5%</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                            <span class="text-slate-300 font-medium">KMI-30 Shariah Index Return</span>
-                            <span class="font-mono text-white font-semibold">+44.0%</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                            <span class="text-slate-300 font-medium">BKTI (Banking Index) Return</span>
-                            <span class="font-mono text-white font-semibold">+51.2%</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                            <span class="text-slate-300 font-medium">OGTI (Oil & Gas Index) Return</span>
-                            <span class="font-mono text-white font-semibold">+35.8%</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-700 text-[10px] text-slate-400 flex justify-between">
-                        <div><strong>SBP Policy Rate:</strong> 11.5% (June Hold)</div>
-                        <div><strong>CPI Inflation:</strong> 8.2% FY27</div>
+                    <div class="h-64 w-full relative flex items-center justify-center">
+                        <canvas id="allocationChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-slate-900 border border-slate-700 rounded-xl p-4">
-                <div class="text-xs text-emerald-400 font-semibold uppercase tracking-wider mb-2 flex items-center gap-1">
-                    <span>⚡</span> <span id="commentaryHeader">Automated Wealth Management Advisory Commentary Engine</span>
-                </div>
-                <p class="text-xs text-slate-300 leading-relaxed font-sans" id="dynamicCommentary">
-                    Your portfolio is currently matching the target trajectory. Outperformance is heavily anchored by the Energy and Fertilizer buckets (FFC, MARI). SBP's holding of the policy rate at 11.5% continues to benefit financial sectors (MCB, UBL) while keeping high dividend yields attractive compared to commercial bank savings accounts. No urgent rebalancing required at this juncture.
-                </p>
+            <!-- BENCHMARK OUTPERFORM BANNER -->
+            <div id="trafficLightBanner" class="p-3 rounded-lg text-center font-bold text-xs border bg-slate-900 border-slate-700">
+                Processing Assessment...
             </div>
 
+            <!-- COMPLETE 28 REFERENCE STOCKS STRUCTURAL DATA LISTING -->
             <div class="bg-fintech-card rounded-xl p-5 shadow-lg">
-                <div class="flex border-b border-slate-700 mb-4 overflow-x-auto gap-2 text-xs font-medium">
-                    <button onclick="switchTab('holdings')" id="tab-holdings" class="pb-2.5 px-2 border-b-2 border-emerald-500 text-emerald-400">Section 12: Stock Intelligence Matrix</button>
-                    <button onclick="switchTab('scenario')" id="tab-scenario" class="pb-2.5 px-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">Section 4.2 & 5: Scenario Modeler</button>
-                    <button onclick="switchTab('copyportfolio')" id="tab-copyportfolio" class="pb-2.5 px-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">Section 15: Copy Portfolio (MUFAP)</button>
+                <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
+                    <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                        <span class="p-1 bg-amber-500/10 text-amber-400 rounded text-xs">M3</span>
+                        Reference Stock Universe & Performance Metrics (28 Active PSX Assets)
+                    </h3>
+                    <div class="text-xs text-slate-400 font-mono" id="allocation-summary-text">
+                        Loading proportions...
+                    </div>
                 </div>
 
-                <div id="content-holdings" class="space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-                        <p class="text-slate-400" id="valIntelDesc">Audited financials verified through dps.psx.com.pk & financials.psx.com.pk.</p>
-                        <div class="text-slate-300"><strong>Active Tax Filter Impact:</strong> <span id="taxFilterBadge" class="text-emerald-400">Filer (15% WHT applied)</span></div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="border-b border-slate-700 bg-slate-900/50 text-slate-400 text-[11px] uppercase">
-                                    <th class="p-3">Ticker</th>
-                                    <th class="p-3">Classification Badge</th>
-                                    <th class="p-3">Bucket Category</th>
-                                    <th class="p-3 text-right">Price (PKR)</th>
-                                    <th class="p-3 text-right">Audited EPS</th>
-                                    <th class="p-3 text-right">DPS</th>
-                                    <th class="p-3 text-right">P/E</th>
-                                    <th class="p-3 text-right">P/B</th>
-                                    <th class="p-3 text-right">Beta (β)</th>
-                                    <th class="p-3 text-right text-emerald-400">Div Yield</th>
-                                </tr>
-                            </table>
-                            <div class="max-h-96 overflow-y-auto">
-                                <table class="w-full text-left text-xs border-collapse" id="stocksTableBody">
-                                    </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="content-scenario" class="hidden space-y-6">
-                        <div class="bg-slate-900/40 p-4 rounded-lg border border-slate-800">
-                            <h4 class="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2" id="scenTitle">What-If Speculative Allocation Modeler</h4>
-                            <p class="text-xs text-slate-400 mb-4" id="scenDesc">Simulate additions or underperformer replacements side-by-side without creating any order execution.</p>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                                <div>
-                                    <label class="block text-slate-300 mb-1.5">Select Ticker to Add/Modify</label>
-                                    <select id="scenarioTicker" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs focus:outline-none">
-                                        </select>
-                                </div>
-                                <div>
-                                    <label class="block text-slate-300 mb-1.5">Proposed Weight Allocation %</label>
-                                    <input type="number" id="scenarioWeight" value="15" min="0" max="100" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs focus:outline-none">
-                                </div>
-                                <div class="flex items-end">
-                                    <button onclick="runScenarioAnalysis()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold p-2 rounded text-xs transition-colors">
-                                        Recompute Simulated Portfolio Output Metrics
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-                            <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
-                                <h5 class="font-bold text-white mb-3" id="scenLeftTitle">Current Model Specifications</h5>
-                                <div class="space-y-2 font-mono">
-                                    <div class="flex justify-between"><span>High Yield Share Bucket:</span> <span id="curHY">50%</span></div>
-                                    <div class="flex justify-between"><span>High Growth Share Bucket:</span> <span id="curHG">40%</span></div>
-                                    <div class="flex justify-between"><span>Tactical Trending Bucket:</span> <span id="curTR">10%</span></div>
-                                    <div class="flex justify-between border-t border-slate-800 pt-1 text-emerald-400 font-bold"><span>Composite Portfolio Beta:</span> <span id="curBeta">0.89</span></div>
-                                </div>
-                            </div>
-                            <div class="bg-slate-950 p-4 rounded-lg border border-emerald-500/20">
-                                <h5 class="font-bold text-emerald-400 mb-3 flex items-center justify-between">
-                                    <span id="scenRightTitle">Simulated Portfolio Projections</span>
-                                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded font-sans" id="scenGuardBadge">Passed Risk Guard</span>
-                                </h5>
-                                <div class="space-y-2 font-mono">
-                                    <div class="flex justify-between"><span>Simulated High Yield:</span> <span id="simHY">40%</span></div>
-                                    <div class="flex justify-between"><span>Simulated High Growth:</span> <span id="simHG">45%</span></div>
-                                    <div class="flex justify-between"><span>Simulated Tactical Trending:</span> <span id="simTR">15%</span></div>
-                                    <div class="flex justify-between border-t border-slate-800 pt-1 text-white font-bold"><span>Simulated Aggregated Beta:</span> <span id="simBeta">0.96</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="content-copyportfolio" class="hidden space-y-6">
-                        <div class="p-4 bg-emerald-950/20 border border-emerald-500/20 rounded-lg">
-                            <h4 class="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex justify-between items-center">
-                                <span id="mufapHeader">Section 15.2: SECP/MUFAP Free Public Disclosure Scraping Matrix</span>
-                                <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded px-2 py-0.5">Scraped Auto-Refresh: 10th of Month</span>
-                            </h4>
-                            <p class="text-xs text-slate-400 mt-1" id="mufapDesc">Observe asset weights held by tier-1 asset management companies. Filtered instantly with institutional conviction indices.</p>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-                            <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800 space-y-3">
-                                <h5 class="font-bold text-white border-b border-slate-800 pb-2" id="mufapListTitle">Ranked Equity Mutual Funds Performance Monitor</h5>
-                                <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                                    <div onclick="selectMutualFund('meezan')" class="p-2 bg-slate-950 rounded border border-emerald-500/30 cursor-pointer hover:border-emerald-400 transition-all flex justify-between items-center">
-                                        <div>
-                                            <div class="font-bold text-white text-xs">Al Meezan Mutual Fund</div>
-                                            <div class="text-[10px] text-slate-500">Sharpe: 1.42 | Info Ratio: 0.62 | Shariah Equity</div>
-                                        </div>
-                                        <div class="text-right font-mono font-bold text-emerald-400">SI: +85.2%</div>
-                                    </div>
-                                    <div onclick="selectMutualFund('nbp')" class="p-2 bg-slate-900 rounded border border-slate-800 cursor-pointer hover:border-slate-600 transition-all flex justify-between items-center">
-                                        <div>
-                                            <div class="font-bold text-white text-xs">NBP Stock Fund</div>
-                                            <div class="text-[10px] text-slate-500">Sharpe: 1.38 | Info Ratio: 0.48 | Conv. Equity</div>
-                                        </div>
-                                        <div class="text-right font-mono font-bold text-slate-300">SI: +79.4%</div>
-                                    </div>
-                                    <div class="p-2 bg-slate-900/30 rounded border border-slate-800/40 opacity-60 flex justify-between items-center">
-                                        <div>
-                                            <div class="font-bold text-slate-400 text-xs">UBL Stock Advantage Fund</div>
-                                            <div class="text-[10px] text-slate-600">Sharpe: 1.31 | Info Ratio: 0.41</div>
-                                        </div>
-                                        <div class="text-right font-mono text-slate-500">SI: +76.8%</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 flex flex-col justify-between">
-                                <div>
-                                    <h5 class="font-bold text-white border-b border-slate-800 pb-2 flex justify-between" id="fundHoldingsTitle">
-                                        <span>Target Fund Top Conviction Positions</span>
-                                        <span class="text-emerald-400" id="activeFundName">Al Meezan Mutual Fund</span>
-                                    </h5>
-                                    <div class="mt-3 space-y-2 font-mono text-[11px]" id="mufapHoldingsBody">
-                                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>1. FFC (Fauji Fertilizer)</span> <span class="text-emerald-400 font-bold">15.0% △</span></div>
-                                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>2. MARI (Mari Petroleum)</span> <span class="text-emerald-400 font-bold">12.0% ▲</span></div>
-                                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>3. OGDC (Oil & Gas Dev.)</span> <span class="text-emerald-400 font-bold">11.0% ▽</span></div>
-                                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>4. SAZEW (Sazgar Eng.)</span> <span class="text-emerald-400 font-bold">10.0% △</span></div>
-                                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>5. UBL (United Bank Ltd)</span> <span class="text-emerald-400 font-bold">9.0% ▼</span></div>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4 pt-3 border-t border-slate-800">
-                                    <button onclick="triggerSmartCopy()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded text-xs transition-colors" id="smartCopyBtn">
-                                        Execute Smart Copy Framework Allocation Model
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="overflow-x-auto max-h-96 border border-slate-800 rounded">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="sticky top-0 z-10 bg-slate-900 text-slate-400 text-[11px] uppercase border-b border-slate-700">
+                            <tr>
+                                <th class="p-3">Ticker</th>
+                                <th class="p-3">Company Name</th>
+                                <th class="p-3">Bucket Allocation</th>
+                                <th class="p-3">Core Sector</th>
+                                <th class="p-3">FY Closing</th>
+                                <th class="p-3">EPS Audit Metric</th>
+                                <th class="p-3">Target Volatility (Beta)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stocksTableBody" class="divide-y divide-slate-800">
+                            <!-- Injected Dynamically by JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
+            </div>
 
-            </section>
-        </main>
+            <!-- REGULATORY TAX COMPLIANCE SUB-LAYER -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs">
+                <div>
+                    <h4 class="font-bold text-amber-500 mb-1">Capital Gains Tax (CGT) Framework</h4>
+                    <p class="text-slate-400">Mandatory NCCPL asset holding period parsing engine active. Section 7E has been eliminated from active metric layers.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-emerald-500 mb-1">Dividend WHT Execution Rules</h4>
+                    <p class="text-slate-400">15% withholding safe tax deduction applied for verified Active Taxpayers (ATL) at source boundaries.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-rose-500 mb-1">Non-Filer Profile Impact Engine</h4>
+                    <p class="text-slate-400">System architecture automatically registers alternative multi-rate penalties if configuration shifts to non-filer mode.</p>
+                </div>
+            </div>
 
-        <footer class="max-w-7xl mx-auto text-center py-8 text-[11px] text-slate-500 border-t border-slate-800 mt-12 space-y-1">
-            <p id="footer1">⚠ PRIVATE & CONFIDENTIAL — RESTRICTED CIRCULATION: This system is strictly limited to internal app groups. Under no circumstances should calculations be construed as SECP-licensed brokerage signaling.</p>
-            <p id="footer2">Calibrated tightly to the FY27 Finance Act frameworks. Developed strictly for educational awareness enhancement modeling metrics.</p>
-        </footer>
+        </section>
+    </main>
 
-        <script>
-            // Data Store matching Section 12 Valuation Intelligence Sheet exactly
-            const stockUniverse = [
-                { ticker: 'FFC', name: 'Fauji Fertilizer Company', bucket: 'High Yield', badge: 'Blue Chip', price: 556, eps: 45.89, dps: 34.86, pe: '10.2x', pb: '4.0x', beta: 0.98, divYield: '6.3%' },
-                { ticker: 'MCB', name: 'MCB Bank Limited', bucket: 'High Yield', badge: 'Blue Chip', price: 404, eps: 48.62, dps: 36.00, pe: '8.3x', pb: '2.1x', beta: 0.87, divYield: '8.9%' },
-                { ticker: 'UBL', name: 'United Bank Limited', bucket: 'High Yield', badge: 'Blue Chip', price: 420, eps: 66.0, dps: 36.00, pe: '6.4x', pb: '1.2x', beta: 0.92, divYield: '8.6%' },
-                { ticker: 'MEBL', name: 'Meezan Bank Limited', bucket: 'High Yield', badge: 'Blue Chip', price: 500, eps: 50.47, dps: 28.00, pe: '9.9x', pb: '2.8x', beta: 0.85, divYield: '5.6%' },
-                { ticker: 'OGDC', name: 'Oil & Gas Dev. Company', bucket: 'High Yield', badge: 'Blue Chip', price: 312, eps: 38.94, dps: 15.00, pe: '5.4x', pb: '1.2x', beta: 0.36, divYield: '4.8%' },
-                { ticker: 'PPL', name: 'Pakistan Petroleum Limited', bucket: 'High Yield', badge: 'Blue Chip', price: 170, eps: 32.97, dps: 7.50, pe: '5.2x', pb: '0.87x', beta: 0.81, divYield: '4.4%' },
-                { ticker: 'MARI', name: 'Mari Petroleum Company', bucket: 'High Yield', badge: 'Growth/E&P', price: 636, eps: 120.0, dps: 65.00, pe: '5.3x', pb: '2.3x', beta: 1.05, divYield: '10.2%' },
-                { ticker: 'HINOON', name: 'Hinopak Motors', bucket: 'High Yield', badge: 'Blue Chip', price: 990, eps: 195.0, dps: 120.00, pe: '5.1x', pb: '2.4x', beta: 0.55, divYield: '12.1%' },
-                { ticker: 'SAZEW', name: 'Sazgar Engineering', bucket: 'High Yield', badge: 'Blue Chip', price: 2160, eps: 320.0, dps: 215.00, pe: '6.8x', pb: '4.1x', beta: 0.61, divYield: '10.0%' },
-                { ticker: 'MTL', name: 'Millat Tractors', bucket: 'High Yield', badge: 'Blue Chip', price: 578, eps: 120.0, dps: 80.00, pe: '4.8x', pb: '1.9x', beta: 0.65, divYield: '13.8%' },
-                { ticker: 'ATLH', name: 'Atlas Honda', bucket: 'High Yield', badge: 'Blue Chip', price: 1750, eps: 285.0, dps: 245.00, pe: '6.1x', pb: '2.7x', beta: 0.68, divYield: '14.0%' },
-                { ticker: 'AKBL', name: 'Askari Bank Limited', bucket: 'High Growth', badge: 'Cyclical', price: 100, eps: 12.0, dps: 8.00, pe: '8.3x', pb: '4.0x', beta: 1.30, divYield: '8.0%' },
-                { ticker: 'FCCL', name: 'Fauji Cement Co.', bucket: 'High Growth', badge: 'Growth/Cyc', price: 58, eps: 8.5, dps: 2.00, pe: '6.8x', pb: '4.1x', beta: 1.45, divYield: '3.4%' },
-                { ticker: 'LCI', name: 'Lucky Cement', bucket: 'High Growth', badge: 'Blue Chip', price: 237, eps: 42.0, dps: 28.00, pe: '5.6x', pb: '2.7x', beta: 1.08, divYield: '11.8%' },
-                { ticker: 'PSO', name: 'Pakistan State Oil', bucket: 'High Growth', badge: 'Cyclical/OMC', price: 362, eps: 50.0, dps: 20.00, pe: '7.2x', pb: '1.6x', beta: 1.15, divYield: '5.5%' },
-                { ticker: 'BOP', name: 'Bank of Punjab', bucket: 'High Growth', badge: 'Cyclical', price: 37, eps: 4.2, dps: 4.00, pe: '8.8x', pb: '3.7x', beta: 1.55, divYield: '10.8%' },
-                { ticker: 'CNERGY', name: 'Cnergyico PK', bucket: 'Trending', badge: 'Penny/Mom', price: 8, eps: 0.8, dps: 0.00, pe: '10.5x', pb: '1.7x', beta: 1.85, divYield: '0%' },
-                { ticker: 'HASCOL', name: 'Hascol Petroleum', bucket: 'Trending', badge: 'Junk/Dist', price: 22, eps: -5.0, dps: 0.00, pe: 'N/A', pb: '5.5x', beta: 2.10, divYield: '0%' },
-                { ticker: 'LOTCHEM', name: 'LotteChemical', bucket: 'Trending', badge: 'Turnaround', price: 29, eps: 4.2, dps: 8.00, pe: '6.9x', pb: '1.6x', beta: 1.35, divYield: '27.6%' }
-            ];
+    <!-- SYSTEM FOOTER -->
+    <footer class="max-w-7xl w-full mx-auto text-center py-6 text-[11px] text-slate-500 border-t border-slate-800 mt-12">
+        <p>Developed strictly for professional asset educational metrics and corporate training. Capital market products involve absolute pricing risks.</p>
+    </footer>
 
-            let activeLanguage = 'en';
-            let chartInstance = null;
-            let chosenProfile = 'W2';
+    <!-- RUNTIME LOGIC SCRIPT ENGINE -->
+    <script>
+        // Exact 3 Model Specifications Dataset Mapping
+        const modelData = {
+            W1: {
+                name: "W1 - Conservative Model Strategy",
+                principal: "PKR 10,000,000",
+                projectedValue: "PKR 15,166,579",
+                capgain: "PKR 4,391,592",
+                dividend: "PKR 592,340",
+                totalreturn: "49.8%",
+                cagr: "22.3%",
+                allocationText: "High Yield: 20% | High Growth: 75% | Trending: 5%",
+                weights: [20, 75, 5],
+                trajectory: [10000000, 11150000, 12380000, 13750000, 15166579],
+                status: "🟡 STABLE MATCH (Portfolio Model v2.2 +49.8% Outperforming Baseline Target Framework)"
+            },
+            W2: {
+                name: "W2 - Moderate Model Strategy",
+                principal: "PKR 10,000,000",
+                projectedValue: "PKR 14,762,928",
+                capgain: "PKR 4,048,488",
+                dividend: "PKR 760,337",
+                totalreturn: "48.1%",
+                cagr: "21.6%",
+                allocationText: "High Yield: 50% | High Growth: 40% | Trending: 10%",
+                weights: [50, 40, 10],
+                trajectory: [10000000, 11020000, 12150000, 13390000, 14762928],
+                status: "🟢 ACTIVE OUTPERFORM (Portfolio Model v2.2 +48.1% vs High Alpha Trajectory Performance Metrics)"
+            },
+            W3: {
+                name: "W3 - Aggressive Model Strategy",
+                principal: "PKR 10,000,000",
+                projectedValue: "PKR 14,915,676",
+                capgain: "PKR 4,178,325",
+                dividend: "PKR 637,014",
+                totalreturn: "48.2%",
+                cagr: "21.7%",
+                allocationText: "High Yield: 30% | High Growth: 50% | Trending: 20%",
+                weights: [30, 50, 20],
+                trajectory: [10000000, 11080000, 12220000, 13510000, 14915676],
+                status: "🔥 HIGH VELOCITY ENGINE (Portfolio Model v2.2 +48.2% Maximum Momentum Alpha Deployment)"
+            }
+        };
 
-            // Complete Translation Dictionary Module 
-            const dictionary = {
-                en: {
-                    subHeader: "Capital Markets Education & Portfolio Guidance Platform | Prepared by Kashan Kazmi",
-                    langBtn: "اردو میں تبدیل کریں",
-                    onboardTitle: "M1: User Onboarding, Risk Profiling & Client Income Assessment",
-                    onboardDesc: "Both Part A (General Risk Profile) and Part B (Client Income Assessment) are mandatory to activate the advisor recommendations layer.",
-                    partATitle: "Part A: General Risk Evaluation",
-                    partBTitle: "Part B: Financial Capacity & Income Assessment",
-                    qA1: "1. Age Bracket & Life Stage",
-                    qA2: "2. Investment Horizon Tenure",
-                    qA3: "3. Primary Objective",
-                    qA4: "4. Reaction to a 20% Market Drop in 3 Months",
-                    qB1: "B1. Primary Employment Status",
-                    qB2: "B2. Monthly Gross Income (PKR)",
-                    qB3: "B3. Fixed Monthly Commitments (PKR)",
-                    qB4: "B4. Net Monthly Investable Surplus",
-                    qB5: "B5. FBR Active Taxpayer Status (ATL)",
-                    qB6: "B6. Financial Literacy Level",
-                    ackText: "Mandatory Acknowledgement: I understand that this platform serves exclusively as an advisory intelligence layer. It does not execute transactions or hold custodian assets. Equity instruments carry a clear risk of principal impairment under volatile conditions.",
-                    modelAlertLabel: "System Model Selection Engine Recommendation",
-                    mandateLabel: "PKR 10,000,000 Illustrative Mandate",
-                    cardM1: "Principal Portfolio Mandate",
-                    cardM2: "Projected Horizon Return (2-Yr Net)",
-                    cardM3: "Net Capital Gain (After FY27 CGT)",
-                    cardM4: "Accrued Dividend Yield Income (Net)",
-                    growthTitle: "Linear vs Exponential Horizon Trajectory Projections",
-                    benchTitle: "Benchmark Performance Scorecard",
-                    commentaryHeader: "Automated Wealth Management Advisory Commentary Engine",
-                    valIntelDesc: "Audited financials verified through dps.psx.com.pk & financials.psx.com.pk.",
-                    scenTitle: "What-If Speculative Allocation Modeler",
-                    scenDesc: "Simulate additions or underperformer replacements side-by-side without creating any order execution.",
-                    scenLeftTitle: "Current Model Specifications",
-                    scenRightTitle: "Simulated Portfolio Projections",
-                    mufapHeader: "Section 15.2: SECP/MUFAP Free Public Disclosure Scraping Matrix",
-                    mufapDesc: "Observe asset weights held by tier-1 asset management companies. Filtered instantly with institutional conviction indices.",
-                    mufapListTitle: "Ranked Equity Mutual Funds Performance Monitor",
-                    fundHoldingsTitle: "Target Fund Top Conviction Positions",
-                    smartCopyBtn: "Execute Smart Copy Framework Allocation Model",
-                    footer1: "⚠ PRIVATE & CONFIDENTIAL — RESTRICTED CIRCULATION: This system is strictly limited to internal app groups. Under no circumstances should calculations be construed as SECP-licensed brokerage signaling.",
-                    footer2: "Calibrated tightly to the FY27 Finance Act frameworks. Developed strictly for educational awareness enhancement modeling metrics."
+        // Complete 28 Stock Database Array
+        const stockUniverse = [
+            { ticker: "FFC", name: "Fauji Fertilizer Company", bucket: "High Yield", sector: "Fertilizer", fy: "31-Dec", eps: "Rs 45.89 (Aud)", beta: "0.98" },
+            { ticker: "MCB", name: "MCB Bank Limited", bucket: "High Yield", sector: "Banking", fy: "31-Dec", eps: "Rs 48.62 (Aud)", beta: "0.87" },
+            { ticker: "UBL", name: "United Bank Limited", bucket: "High Yield", sector: "Banking", fy: "31-Dec", eps: "Rs 66.00 (Aud)", beta: "0.92" },
+            { ticker: "MEBL", name: "Meezan Bank Limited", bucket: "High Yield", sector: "Islamic Banking", fy: "31-Dec", eps: "Rs 50.47 (Aud)", beta: "0.85" },
+            { ticker: "OGDC", name: "Oil & Gas Dev. Company", bucket: "High Yield", sector: "E&P", fy: "30-Jun", eps: "Rs 38.94 (Aud)", beta: "0.36" },
+            { ticker: "PPL", name: "Pakistan Petroleum Limited", bucket: "High Yield", sector: "E&P", fy: "30-Jun", eps: "Rs 32.97 (Unaud)", beta: "0.81" },
+            { ticker: "MARI", name: "Mari Petroleum Company", bucket: "High Yield", sector: "E&P", fy: "30-Jun", eps: "Rs 120.00 (Aud)", beta: "1.05" },
+            { ticker: "HINOON", name: "Hinopak Motors", bucket: "High Yield", sector: "Auto", fy: "31-Dec", eps: "Rs 195.00 (Aud)", beta: "0.55" },
+            { ticker: "SAZEW", name: "Sazgar Engineering", bucket: "High Yield", sector: "Auto", fy: "30-Jun", eps: "Rs 320.00 (Aud)", beta: "0.61" },
+            { ticker: "MTL", name: "Millat Tractors", bucket: "High Yield", sector: "Auto/Engineering", fy: "31-Dec", eps: "Rs 120.00 (Aud)", beta: "0.65" },
+            { ticker: "SRVI", name: "Service Industries", bucket: "High Yield", sector: "Consumer", fy: "31-Dec", eps: "As Per Audit", beta: "Moderate" },
+            { ticker: "ATLH", name: "Atlas Honda", bucket: "High Yield", sector: "Auto", fy: "31-Mar", eps: "Rs 285.00 (Aud)", beta: "0.68" },
+            { ticker: "AKBL", name: "Askari Bank Limited", bucket: "High Growth", sector: "Banking", fy: "31-Dec", eps: "Rs 12.00 (Aud)", beta: "1.30" },
+            { ticker: "FCCL", name: "Fauji Cement Co.", bucket: "High Growth", sector: "Cement", fy: "31-Dec", eps: "Rs 8.50 (Aud)", beta: "1.45" },
+            { ticker: "PTC", name: "Pakistan Telecom. Co.", bucket: "High Growth", sector: "Telecom", fy: "31-Dec", eps: "Dynamic Tier", beta: "High Growth" },
+            { ticker: "PSO", name: "Pakistan State Oil", bucket: "High Growth", sector: "OMC", fy: "30-Jun", eps: "Rs 50.00 (Aud)", beta: "Growth Cap" },
+            { ticker: "BOP", name: "Bank of Punjab", bucket: "High Growth", sector: "Banking", fy: "31-Dec", eps: "Rs 4.20 (Aud)", beta: "Growth" },
+            { ticker: "MLCF", name: "Maple Leaf Cement", bucket: "High Growth", sector: "Cement", fy: "30-Jun", eps: "Standard", beta: "Market Core" },
+            { ticker: "LCI", name: "Lucky Cement", bucket: "High Growth", sector: "Cement", fy: "30-Jun", eps: "Rs 42.00 (Aud)", beta: "1.08" },
+            { ticker: "ISL", name: "International Steels", bucket: "High Growth", sector: "Steel", fy: "30-Jun", eps: "Cyclical", beta: "High Beta" },
+            { ticker: "SGF", name: "Sitara Glass Factory", bucket: "High Growth", sector: "Glass", fy: "30-Jun", eps: "Standard", beta: "Growth Tier" },
+            { ticker: "ILP", name: "ICI Pakistan", bucket: "High Growth", sector: "Chemicals", fy: "30-Jun", eps: "Growth Set", beta: "Market Core" },
+            { ticker: "CNERGY", name: "Cnergyico PK", bucket: "Trending", sector: "Refinery", fy: "30-Jun", eps: "Event-Driven", beta: "High Momentum" },
+            { ticker: "PRL", name: "Pakistan Refinery", bucket: "Trending", sector: "Refinery", fy: "30-Jun", eps: "Event-Driven", beta: "High Momentum" },
+            { ticker: "NRL", name: "National Refinery", bucket: "Trending", sector: "Refinery", fy: "30-Jun", eps: "Tactical", beta: "High Beta" },
+            { ticker: "FFL", name: "Fauji Foods", bucket: "Trending", sector: "FMCG", fy: "31-Dec", eps: "Tactical", beta: "High Volatility" },
+            { ticker: "HASCOL", name: "Hascol Petroleum", bucket: "Trending", sector: "OMC", fy: "31-Dec", eps: "Speculative", beta: "High Volatility" },
+            { ticker: "LOTCHEM", name: "LotteChemical", bucket: "Trending", sector: "Chemicals", fy: "31-Dec", eps: "Tactical", beta: "Event Core" }
+        ];
+
+        let trajectoryChart = null;
+        let allocationChart = null;
+        let authMode = 'signup';
+
+        window.onload = function() {
+            calculateSurplus();
+            populateStocksTable();
+            
+            const savedUser = localStorage.getItem('currentMajidUser');
+            if (savedUser) { switchAuthModeToLogin(); }
+        };
+
+        // AUTH LAYER LOGIC
+        function toggleAuthMode() {
+            if (authMode === 'signup') { switchAuthModeToLogin(); } 
+            else { switchAuthModeToSignUp(); }
+        }
+
+        function switchAuthModeToLogin() {
+            authMode = 'login';
+            document.getElementById('authTitle').innerText = "Account Secure Login";
+            document.getElementById('authSubtitle').innerText = "Enter authorization parameters to resume evaluation";
+            document.getElementById('fullNameGroup').classList.add('hidden');
+            document.getElementById('authSubmitBtn').innerText = "Secure Authorization Authorization";
+            document.getElementById('toggleText').innerText = "New environment?";
+            document.getElementById('toggleAuthBtn').innerText = "Create Fresh Account";
+        }
+
+        function switchAuthModeToSignUp() {
+            authMode = 'signup';
+            document.getElementById('authTitle').innerText = "Create Your Account";
+            document.getElementById('fullNameGroup').classList.remove('hidden');
+            document.getElementById('authSubmitBtn').innerText = "Register & Initialize Environment";
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+
+            if (authMode === 'signup') {
+                const name = document.getElementById('authName').value.trim() || "Muhammad Majid";
+                localStorage.setItem('currentMajidUser', JSON.stringify({ name, email, password }));
+                enterAppWorkspace(name);
+            } else {
+                const storedData = localStorage.getItem('currentMajidUser');
+                if (storedData) {
+                    const user = JSON.parse(storedData);
+                    if (user.email === email && user.password === password) {
+                        enterAppWorkspace(user.name);
+                    } else { alert("Error: Security Authorization Failure."); }
+                } else { alert("No configuration logs found. Please sign up."); }
+            }
+        }
+
+        function enterAppWorkspace(username) {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainHeader').classList.remove('hidden');
+            document.getElementById('onboardingScreen').classList.remove('hidden');
+            document.getElementById('welcomeUser').innerText = "Welcome, " + username + "!";
+        }
+
+        function handleLogout() {
+            document.getElementById('mainHeader').classList.add('hidden');
+            document.getElementById('onboardingScreen').classList.add('hidden');
+            document.getElementById('appDashboard').classList.add('hidden');
+            switchAuthModeToLogin();
+            document.getElementById('authScreen').classList.remove('hidden');
+        }
+
+        // SURPLUS METRIC CALCULATION
+        function calculateSurplus() {
+            const gross = parseFloat(document.getElementById('monthlyIncomeVal').value) || 0;
+            const commitments = parseFloat(document.getElementById('monthlyCommitments').value) || 0;
+            const net = gross - commitments;
+            document.getElementById('surplusDisplay').innerText = "PKR " + (net > 0 ? net.toLocaleString() : 0);
+        }
+
+        function processRiskProfile(event) {
+            event.preventDefault();
+            document.getElementById('onboardingScreen').classList.add('hidden');
+            document.getElementById('appDashboard').classList.remove('hidden');
+            
+            // Pre-initialize standard charts safely
+            initTrajectoryChart();
+            initAllocationChart();
+            
+            // Switch to default suggested system tier
+            const suggestedTier = document.getElementById('stageAge').value;
+            switchActiveModel(suggestedTier); 
+        }
+
+        // TRULY LIVE SYNCHRONIZED CHARTS & CONFIG ENGINE
+        function switchActiveModel(modelCode) {
+            const data = modelData[modelCode];
+            if (!data) return;
+
+            // 1. Update text variables smoothly
+            document.getElementById('activeModelTitle').innerText = data.name;
+            document.getElementById('kpi-projected').innerText = data.projectedValue;
+            document.getElementById('kpi-capgain').innerText = data.capgain;
+            document.getElementById('kpi-dividend').innerText = data.dividend;
+            document.getElementById('kpi-totalreturn').innerText = data.totalreturn;
+            document.getElementById('kpi-cagr').innerText = data.cagr;
+            document.getElementById('allocation-summary-text').innerText = data.allocationText;
+            document.getElementById('trafficLightBanner').innerText = data.status;
+
+            // 2. Synchronize navigation buttons highlights
+            ['W1', 'W2', 'W3'].forEach(m => {
+                const btn = document.getElementById('btn' + m);
+                if (m === modelCode) {
+                    btn.className = "px-4 py-2 rounded text-xs font-bold font-mono border-2 border-emerald-500 bg-emerald-950/60 text-emerald-400 cursor-pointer shadow-lg";
+                } else {
+                    btn.className = "px-4 py-2 rounded text-xs font-bold font-mono border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 cursor-pointer";
+                }
+            });
+
+            // 3. Trigger live canvas animation update sequences
+            if (trajectoryChart) {
+                trajectoryChart.data.datasets[0].data = data.trajectory;
+                if(modelCode === 'W1') trajectoryChart.data.datasets[0].borderColor = '#3b82f6';
+                if(modelCode === 'W2') trajectoryChart.data.datasets[0].borderColor = '#10b981';
+                if(modelCode === 'W3') trajectoryChart.data.datasets[0].borderColor = '#f59e0b';
+                trajectoryChart.update();
+            }
+
+            if (allocationChart) {
+                allocationChart.data.datasets[0].data = data.weights;
+                allocationChart.update();
+            }
+        }
+
+        // INITIALIZE LINE TRAJECTORY PROJECTION
+        function initTrajectoryChart() {
+            if (trajectoryChart !== null) return;
+            const ctx = document.getElementById('trajectoryChart').getContext('2d');
+            trajectoryChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1 Jan 2026', '30 Jun 2026', '31 Dec 2026', '30 Jun 2027', '31 Dec 2027'],
+                    datasets: [{
+                        label: 'Asset Capital Growth Pipeline (PKR)',
+                        data: modelData.W1.trajectory,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(30, 41, 59, 0.2)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#fff',
+                        pointRadius: 5
+                    }]
                 },
-                ur: {
-                    subHeader: "کیپیٹل مارکیٹس ایجوکیشن اینڈ پورٹ فولیو گائیڈنس پلیٹ فارم | تیار کردہ: کاشان کاظمی",
-                    langBtn: "English Mode",
-                    onboardTitle: "صارف کی آن بورڈنگ، رسک پروفائلنگ اور آمدنی کا اندازہ",
-                    onboardDesc: "مشاورتی سفارشات کی لیئر کو فعال کرنے کے لیے حصہ A اور حصہ B دونوں لازمی ہیں۔",
-                    partATitle: "حصہ A: عمومی رسک کا اندازہ",
-                    partBTitle: "حصہ B: مالیاتی صلاحیت اور ماہانہ آمدنی کا جائزہ",
-                    qA1: "1۔ عمر اور زندگی کا مرحلہ",
-                    qA2: "2۔ سرمایہ کاری کی مدت (ٹینور)",
-                    qA3: "3۔ سرمایہ کاری کا بنیادی مقصد",
-                    qA4: "4۔ 3 ماہ میں مارکیٹ 20 فیصد گرنے پر ردعمل",
-                    qB1: "B1۔ روزگار کی موجودہ صورتحال",
-                    qB2: "B2۔ کل ماہانہ آمدنی (PKR)",
-                    qB3: "B3۔ ماہانہ مقررہ اخراجات/واجبات",
-                    qB4: "B4۔ خالص ماہانہ سرمایہ کاری کا سرپلس",
-                    qB5: "B5۔ ایف بی آر ایکٹو ٹیکس پیئر اسٹیٹس (ATL)",
-                    qB6: "B6۔ مالیاتی خواندگی (لیول)",
-                    ackText: "لازمی اقرار نامہ: میں سمجھتا ہوں کہ یہ ایپ صرف مشاورتی معلومات فراہم کرتی ہے۔ یہ سودے نہیں کرتی اور نہ ہی رقم اپنے پاس رکھتی ہے۔ شیئرز میں نقصان کا خطرہ ہوتا ہے۔",
-                    modelAlertLabel: "سسٹم ماڈل سلیکشن انجن کی تجویز کردہ درجہ بندی",
-                    mandateLabel: "PKR 10,000,000 کا پورٹ فولیو ماڈل",
-                    cardM1: "کل سرمایہ کاری کی رقم",
-                    cardM2: "توقع کردہ منافع (2 سالہ نیٹ)",
-                    cardM3: "خالص کیپیٹل گین (ٹیکس وضع کے بعد)",
-                    cardM4: "کل خالص ڈیویڈنڈ آمدنی (بعد از ٹیکس)",
-                    growthTitle: "لینیئر بمقابلہ ایکسپونینشل گروتھ کی پیش گوئی کا چارٹ",
-                    benchTitle: "بینچ مارک پرفارمنس اسکور کارڈ",
-                    commentaryHeader: "خودکار مالیاتی ایڈوائزری کمنٹری انجن",
-                    valIntelDesc: "آڈٹ شدہ مالیاتی ڈیٹا ماخذ: dps.psx.com.pk",
-                    scenTitle: "فرضی سرمایہ کاری کی تبدیلی کا ماڈلر",
-                    scenDesc: "بغیر کوئی سودا کیے کسی نئے شیئر کے اضافے یا تبدیلی کا اثر چیک کریں۔",
-                    scenLeftTitle: "موجودہ ماڈل کی تفصیلات",
-                    scenRightTitle: "فرضی پورٹ فولیو کی پیش گوئی",
-                    mufapHeader: "سیکشن 15.2: میوفاپ (MUFAP) پبلک ڈیٹا ہولڈنگز میٹرکس",
-                    mufapDesc: "پاکستان کے ٹاپ فنڈ مینیجرز کی ہولڈنگز دیکھیں اور ان کی ہوبہو نقل یا سمارٹ کاپی کریں۔",
-                    mufapListTitle: "درجہ بندی کے لحاظ سے میوچل فنڈز کی کارکردگی",
-                    fundHoldingsTitle: "منتخب کردہ فنڈ کی ٹاپ انویسٹمنٹ پوزیشنز",
-                    smartCopyBtn: "سمارٹ کاپی فریم ورک کے مطابق الیکیشن لاگو کریں",
-                    footer1: "⚠ نجی اور خفیہ دستاویز - یہ ایپلیکیشن کسی بھی قسم کے ٹریڈنگ سگنل فراہم نہیں کرتی۔",
-                    footer2: "مالیاتی سال 2027 کے بجٹ رولز کے مطابق کیلکولیشن انجن۔"
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                    }
                 }
-            };
+            });
+        }
 
-            window.onload = function() {
-                calculateSurplus();
-                populateStocksTable();
-                populateScenarioTickers();
-            };
-
-            function toggleLanguage() {
-                activeLanguage = activeLanguage === 'en' ? 'ur' : 'en';
-                const langData = dictionary[activeLanguage];
-                for (let key in langData) {
-                    const el = document.getElementById(key);
-                    if (el) el.innerText = langData[key];
-                }
-                updateCommentaryText();
-            }
-
-            function calculateSurplus() {
-                const gross = parseFloat(document.getElementById('monthlyIncomeVal').value) || 0;
-                const commitments = parseFloat(document.getElementById('monthlyCommitments').value) || 0;
-                let surplus = gross - commitments;
-                if (surplus < 0) surplus = 0;
-
-                document.getElementById('surplusDisplay').innerText = "PKR " + surplus.toLocaleString();
-                
-                // Surplus Classification per Sec 5 (B4)
-                const sClass = document.getElementById('surplusClass');
-                if (surplus < 25000) { sClass.innerText = "Micro Investor"; }
-                else if (surplus <= 100000) { sClass.innerText = "Retail"; }
-                else if (surplus <= 500000) { sClass.innerText = "Emerging HNW"; }
-                else { sClass.innerText = "HNW"; }
-            }
-
-            function processRiskProfile(event) {
-                event.preventDefault();
-                
-                const score1 = parseFloat(document.getElementById('stageAge').value);
-                const score2 = parseFloat(document.getElementById('tenureHorizon').value);
-                const score3 = parseFloat(document.getElementById('primaryObjective').value);
-                const score4 = parseFloat(document.getElementById('marketReaction').value);
-                
-                const totalScore = (score1 + score2 + score3 + score4) / 4;
-                
-                // Core Mapping Rules to Section 3 (W1, W2, W3)
-                if (totalScore <= 1.6) { chosenProfile = 'W1'; }
-                else if (totalScore <= 2.5) { chosenProfile = 'W2'; }
-                else { chosenProfile = 'W3'; }
-
-                document.getElementById('onboardingScreen').classList.add('hidden');
-                document.getElementById('appDashboard').classList.remove('hidden');
-                
-                switchActiveModel(chosenProfile);
-            }
-
-            function switchActiveModel(modelCode) {
-                chosenProfile = modelCode;
-                const badge = document.getElementById('recommendedModelBadge');
-                
-                // Section 4.1 Returns Matrix exact dictionary variables setup
-                const metrics = {
-                    W1: { label: "W1 - Conservative Profile", val: "PKR 15,166,579", pct: "Total Growth: +49.8%", gain: "PKR 4,391,592", div: "PKR 592,340", cagr: "~22.3%", beta: "0.74", hy: "20%", hg: "75%", tr: "5%" },
-                    W2: { label: "W2 - Moderate Profile", val: "PKR 14,762,928", pct: "Total Growth: +48.1%", gain: "PKR 4,048,488", div: "PKR 760,337", cagr: "~21.6%", beta: "0.89", hy: "50%", hg: "40%", tr: "10%" },
-                    W3: { label: "W3 - Aggressive Profile", val: "PKR 14,915,676", pct: "Total Growth: +48.2%", gain: "PKR 4,178,325", div: "PKR 637,014", cagr: "~21.7%", beta: "1.31", hy: "30%", hg: "50%", tr: "20%" }
-                };
-
-                const currentData = metrics[modelCode];
-                badge.innerText = currentData.label;
-                document.getElementById('mProjValue').innerText = currentData.val;
-                document.getElementById('mProjPct').innerText = currentData.pct;
-                document.getElementById('mCapGain').innerText = currentData.gain;
-                document.getElementById('mDivIncome').innerText = currentData.div;
-                document.getElementById('impliedCagr').innerText = "Implied 2-Yr CAGR: " + currentData.cagr;
-                
-                // Set text indicators in Left Scenario Side panel
-                document.getElementById('curHY').innerText = currentData.hy;
-                document.getElementById('curHG').innerText = currentData.hg;
-                document.getElementById('curTR').innerText = currentData.tr;
-                document.getElementById('curBeta').innerText = currentData.beta;
-
-                // Adjust traffic lights according to index alpha
-                updateBenchmarkScorecard(modelCode, currentData.pct);
-                updateCommentaryText();
-                initChart(modelCode);
-            }
-
-            function updateBenchmarkScorecard(modelCode, portfolioGrowthStr) {
-                const banner = document.getElementById('trafficLightBanner');
-                if (modelCode === 'W1') {
-                    banner.className = "p-3 rounded-lg text-center font-bold text-xs mb-4 border bg-emerald-950/60 border-emerald-500/40 text-emerald-400";
-                    banner.innerText = activeLanguage === 'en' ? "🟢 STRONG OUTPERFORM (Portfolio +49.8% vs KSE-100 +41.2%)" : "🟢 شاندار کارکردگی (پورٹ فولیو +49.8% بمقابلہ انڈیکس +41.2%)";
-                } else if (modelCode === 'W2') {
-                    banner.className = "p-3 rounded-lg text-center font-bold text-xs mb-4 border bg-emerald-950/60 border-emerald-500/40 text-emerald-400";
-                    banner.innerText = activeLanguage === 'en' ? "🟢 OUTPERFORM (Portfolio +48.1% vs KSE-100 +41.2%)" : "🟢 بہتر کارکردگی (پورٹ فولیو +48.1% بمقابلہ انڈیکس +41.2%)";
-                } else {
-                    banner.className = "p-3 rounded-lg text-center font-bold text-xs mb-4 border bg-emerald-950/60 border-emerald-500/40 text-emerald-400";
-                    banner.innerText = activeLanguage === 'en' ? "🟢 OUTPERFORM (Portfolio +48.2% vs KSE-100 +41.2%)" : "🟢 بہتر کارکردگی (پورٹ فولیو +48.2% بمقابلہ انڈیکس +41.2%)";
-                }
-            }
-
-            function updateTaxEngineUI() {
-                const status = document.getElementById('filerStatus').value;
-                const badge = document.getElementById('taxFilterBadge');
-                if (status === 'filer') {
-                    badge.innerText = "Filer (15% WHT applied)";
-                    badge.className = "text-emerald-400 font-bold";
-                } else {
-                    badge.innerText = "Non-Filer Penalty Flag (30% WHT / Double CGT Slabs Applied)";
-                    badge.className = "text-rose-400 font-bold animate-pulse";
-                }
-                updateCommentaryText();
-            }
-
-            function updateCommentaryText() {
-                const comText = document.getElementById('dynamicCommentary');
-                const isFiler = document.getElementById('filerStatus').value === 'filer';
-
-                if (activeLanguage === 'en') {
-                    comText.innerText = `Your profile is currently tracking the ${chosenProfile} strategy allocations. Top active value centers remain FFC and MARI. ${!isFiler ? 'WARNING: Non-filer status triggers double withholding taxes at source, severely reducing compound yield returns over the 2-Year horizon.' : 'Filer status ensures maximum retention of the gross dividend inflows.'} SBP Policy Rate unchanged at 11.5% matches the target yield matrix.`;
-                } else {
-                    comText.innerText = `آپ کا انویسٹمنٹ پورٹ فولیو اس وقت ${chosenProfile} حکمت عملی کے مطابق ڈیزائن ہے۔ سب سے زیادہ فائدہ پہنچانے والے شیئرز میں FFC اور MARI شامل ہیں۔ ${!isFiler ? 'انتباہ: نان فائلر ہونے کی وجہ سے کمپنی منافع پر دگنا ٹیکس کاٹے گی جس سے منافع کم ہو جائے گا۔' : 'فائلر اسٹیٹس آپ کے ٹیکس کو کم سے کم رکھنے میں معاون ہے۔'} اسٹیٹ بینک کی بنیادی سود کی شرح 11.5 فیصد پر برقرار ہے۔`;
-                }
-            }
-
-            function changeCutoffView() {
-                alert("Cutoff Projections loaded successfully for selected review period view context!");
-            }
-
-            function populateStocksTable() {
-                const body = document.getElementById('stocksTableBody');
-                body.innerHTML = "";
-                stockUniverse.forEach(s => {
-                    const tr = document.createElement('tr');
-                    tr.className = "border-b border-slate-800 hover:bg-slate-900/40 transition-colors";
-                    
-                    // Risk Badge Color Coding logic per Section 13
-                    let badgeClass = "bg-blue-500/10 text-blue-400 border-blue-500/20";
-                    if (s.badge === 'Growth/E&P') badgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
-                    if (s.badge === 'Penny/Mom') badgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/20";
-                    if (s.badge === 'Junk/Dist') badgeClass = "bg-rose-500/10 text-rose-400 border-rose-500/20";
-
-                    tr.innerHTML = `
-                        <td class="p-3 font-bold text-white font-mono">${s.ticker}</td>
-                        <td class="p-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] border ${badgeClass}">${s.badge}</span>
-                        </td>
-                        <td class="p-3 text-slate-300">${s.bucket}</td>
-                        <td class="p-3 text-right font-mono text-slate-300">Rs ${s.price.toLocaleString()}</td>
-                        <td class="p-3 text-right font-mono text-slate-400">Rs ${s.eps}</td>
-                        <td class="p-3 text-right font-mono text-slate-400">Rs ${s.dps}</td>
-                        <td class="p-3 text-right font-mono text-slate-400">${s.pe}</td>
-                        <td class="p-3 text-right font-mono text-slate-400">${s.pb}</td>
-                        <td class="p-3 text-right font-mono text-slate-400">${s.beta}</td>
-                        <td class="p-3 text-right font-mono font-semibold text-emerald-400">${s.divYield}</td>
-                    `;
-                    body.appendChild(tr);
-                });
-            }
-
-            function populateScenarioTickers() {
-                const select = document.getElementById('scenarioTicker');
-                select.innerHTML = "";
-                stockUniverse.forEach(s => {
-                    const opt = document.createElement('option');
-                    opt.value = s.ticker;
-                    opt.innerText = `${s.ticker} - ${s.name} (${s.badge})`;
-                    select.appendChild(opt);
-                });
-            }
-
-            function runScenarioAnalysis() {
-                const ticker = document.getElementById('scenarioTicker').value;
-                const weight = parseFloat(document.getElementById('scenarioWeight').value) || 0;
-                
-                const matchedStock = stockUniverse.find(s => s.ticker === ticker);
-                
-                // Section 13 Risk Guard checking simulation logic
-                const guardBadge = document.getElementById('scenGuardBadge');
-                if ((chosenProfile === 'W1' || chosenProfile === 'W2') && (matchedStock.badge === 'Penny/Mom' || matchedStock.badge === 'Junk/Dist')) {
-                    guardBadge.innerText = "⚠ Risk Guard Warning triggered";
-                    guardBadge.className = "text-[10px] bg-rose-500/10 text-rose-400 px-1.5 py-0.5 rounded font-sans font-bold border border-rose-500/20 animate-bounce";
-                    alert(`Risk Profile Guard Alert: Adding ${ticker} (${matchedStock.badge}) compromises the guidelines of your Conservative model mandate! Please review risk factors before confirmation.`);
-                } else {
-                    guardBadge.innerText = "Passed Profile Safety Matrix Checks";
-                    guardBadge.className = "text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded font-sans";
-                }
-
-                // Mutate simulated metrics slightly to display functionality
-                document.getElementById('simHY').innerText = "35%";
-                document.getElementById('simHG').innerText = "45%";
-                document.getElementById('simTR').innerText = "20%";
-                document.getElementById('simBeta').innerText = (parseFloat(matchedStock.beta) * 0.4 + 0.7).toFixed(2);
-            }
-
-            function selectMutualFund(fundKey) {
-                const container = document.getElementById('mufapHoldingsBody');
-                const activeTitle = document.getElementById('activeFundName');
-                
-                if (fundKey === 'meezan') {
-                    activeTitle.innerText = "Al Meezan Mutual Fund";
-                    container.innerHTML = `
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>1. FFC (Fauji Fertilizer)</span> <span class="text-emerald-400 font-bold">15.0% △</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>2. MARI (Mari Petroleum)</span> <span class="text-emerald-400 font-bold">12.0% ▲</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>3. OGDC (Oil & Gas Dev.)</span> <span class="text-emerald-400 font-bold">11.0% ▽</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>4. SAZEW (Sazgar Eng.)</span> <span class="text-emerald-400 font-bold">10.0% △</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>5. UBL (United Bank Ltd)</span> <span class="text-emerald-400 font-bold">9.0% ▼</span></div>
-                    `;
-                } else {
-                    activeTitle.innerText = "NBP Stock Fund";
-                    container.innerHTML = `
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>1. MCB (MCB Bank Ltd)</span> <span class="text-emerald-400 font-bold">14.0% △</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>2. UBL (United Bank Ltd)</span> <span class="text-emerald-400 font-bold">13.0% ▲</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>3. FFC (Fauji Fertilizer)</span> <span class="text-emerald-400 font-bold">10.0% ─</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>4. PSO (Pakistan State Oil)</span> <span class="text-emerald-400 font-bold">8.0% △</span></div>
-                        <div class="flex justify-between items-center bg-slate-900 p-1.5 rounded"><span>5. LCI (Lucky Cement)</span> <span class="text-emerald-400 font-bold">7.0% ▼</span></div>
-                    `;
-                }
-            }
-
-            function triggerSmartCopy() {
-                alert("Smart Copy Model initiated: Filtering out incompatible structural holdings to protect target portfolio beta limits automatically.");
-            }
-
-            function switchTab(tabId) {
-                ['holdings', 'scenario', 'copyportfolio'].forEach(t => {
-                    document.getElementById('content-' + t).classList.add('hidden');
-                    document.getElementById('tab-' + t).className = "pb-2.5 px-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200";
-                });
-                document.getElementById('content-' + tabId).classList.remove('hidden');
-                document.getElementById('tab-' + tabId).className = "pb-2.5 px-2 border-b-2 border-emerald-500 text-emerald-400";
-            }
-
-            function initChart(modelCode) {
-                const ctx = document.getElementById('trajectoryChart').getContext('2d');
-                if (chartInstance) chartInstance.destroy();
-
-                let expValues = [10000000, 11200000, 12400000, 13600000, 14762928];
-                if (modelCode === 'W1') expValues = [10000000, 11400000, 12800000, 14000000, 15166579];
-                if (modelCode === 'W3') expValues = [10000000, 11100000, 12300000, 13500000, 14915676];
-
-                chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['1 Jan 2026', 'June 2026', 'Dec 2026', 'June 2027', '31 Dec 2027'],
-                        datasets: [
-                            {
-                                label: 'Exponential CAGR Pathway',
-                                data: expValues,
-                                borderColor: '#22c55e',
-                                backgroundColor: 'rgba(34, 197, 94, 0.05)',
-                                fill: true,
-                                tension: 0.3,
-                                borderWidth: 2.5
-                            },
-                            {
-                                label: 'Linear Target Pathway',
-                                data: [10000000, 11100000, 12200000, 13300000, 14400000],
-                                borderColor: '#64748b',
-                                borderDash: [4, 4],
-                                fill: false,
-                                tension: 0
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
-                        scales: {
-                            x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
-                            y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+        // INITIALIZE PIE WEIGHT ALLOCATION PROPORTIONS
+        function initAllocationChart() {
+            if (allocationChart !== null) return;
+            const ctx = document.getElementById('allocationChart').getContext('2d');
+            allocationChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['High Yield Bucket', 'High Growth Bucket', 'Trending Bucket'],
+                    datasets: [{
+                        data: modelData.W1.weights,
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
+                        borderWidth: 1,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { size: 11 } }
                         }
                     }
-                });
-            }
-        </script>
+                }
+            });
+        }
+
+        // RENDER COMPLETE 28 REFERENCE STOCKS
+        function populateStocksTable() {
+            const tbody = document.getElementById('stocksTableBody');
+            tbody.innerHTML = "";
+            stockUniverse.forEach(s => {
+                let badgeStyle = "border-emerald-500/30 text-emerald-400 bg-emerald-500/5";
+                if(s.bucket === "High Growth") badgeStyle = "border-blue-500/30 text-blue-400 bg-blue-500/5";
+                if(s.bucket === "Trending") badgeStyle = "border-amber-500/30 text-amber-400 bg-amber-500/5";
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-900/40 text-slate-300 transition-colors">
+                        <td class="p-3 font-bold text-white font-mono">${s.ticker}</td>
+                        <td class="p-3 font-medium">${s.name}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold border ${badgeStyle}">${s.bucket}</span>
+                        </td>
+                        <td class="p-3 text-slate-400">${s.sector}</td>
+                        <td class="p-3 text-slate-400 font-mono">${s.fy}</td>
+                        <td class="p-3 text-slate-200 font-mono">${s.eps}</td>
+                        <td class="p-3 font-mono text-slate-400">${s.beta}</td>
+                    </tr>`;
+            });
+        }
+    </script>
 </body>
 </html>
